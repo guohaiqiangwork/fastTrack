@@ -1,16 +1,186 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark"
+				},
+				"enablePullDownRefresh": false
 			}
+		}, {
+			"path": "pages/login/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/login/noPassword",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/model",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/one",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	],
+
+		, {
+			"path": "pages/tabBar/two/two",
+			"style": {
+				"navigationBarTitleText": "订单创建",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/three",
+			"style": {
+				"navigationBarTitleText": "订单管理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/four/four",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/noModel",
+			"style": {
+				"navigationBarTitleText": "关联账户",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	    ,{
+            "path" : "pages/tabBar/one/product",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商品管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/one/edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑分类",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/one/details",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/two/add",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加商品",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/two/edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑订单信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/three/order",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/three/issue",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/tabBar/three/transport",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "货运信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "#A77845"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#333333",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/tabBar/one/one",
+				"enablePullDownRefresh": false,
+				"text": "首页",
+				"iconPath": "static/images/icon/tabOne1.png",
+				"selectedIconPath": "static/images/icon/tabOne.png"
+			},
+			{
+				"pagePath": "pages/tabBar/two/two",
+				"enablePullDownRefresh": false,
+				"text": "订单创建",
+				"iconPath": "static/images/icon/tabTwo.png",
+				"selectedIconPath": "static/images/icon/tabTwo1.png"
+			}, {
+				"pagePath": "pages/tabBar/three/three",
+				"enablePullDownRefresh": false,
+				"text": "订单管理",
+				"iconPath": "static/images/icon/tabThree.png",
+				"selectedIconPath": "static/images/icon/tabThree1.png"
+			},
+			{
+				"pagePath": "pages/tabBar/four/four",
+				"enablePullDownRefresh": false,
+				"text": "我的",
+				"iconPath": "static/images/icon/tabFoure.png",
+				"selectedIconPath": "static/images/icon/tabFoure1.png"
+			}
+		]
 	}
+
 }
