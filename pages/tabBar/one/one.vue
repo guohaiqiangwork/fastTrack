@@ -12,7 +12,7 @@
 						<view class="wp-70 pl-20 fs-25">
 							<input type="text" value="" placeholder="请扫描或输入订单码" placeholder-style="font-size:25upx" placeholder-class="color-29" />
 						</view>
-						<view class="wp-15 right_btn">收费</view>
+						<view class="wp-15 right_btn">收货</view>
 					</view>
 
 					<view class="flex bg-ff mt-30">
@@ -42,7 +42,21 @@
 				<view :class="typeTab == item.type ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.type)" v-for="(item, index) in tabList" :key="index">
 					{{ item.title }}
 				</view>
-				<view class="" style="background-color: #979D9F;height: 410upx;"></view>
+				<view class="eacher_moudel">
+					<view class="eacher">
+						<view class="item_border" v-for="(item, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="index"></view>
+						<view class="item_number">
+							<view class="number_moudel mt-20" v-for="(item, index) in [1, 2, 3]" :key="index">
+								<text class="pl-30" style="font-size: 21upx;position: absolute;">超级硬粟（1级）</text>
+							</view>
+						</view>
+					</view>
+					<view class="item_moudel">
+						<view class="item" v-for="(item, index) in [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]" :key="index">{{ item }}%</view>
+					</view>
+
+					<!-- <qiun-data-charts type="column" :chartData="chartData" /> -->
+				</view>
 				<view class="mt-10 ml-20" style="background-color: #F9F6EE;">
 					<view class="fs-21" style="line-height: 1.2;" v-if="active == 1">销售商品（种类）</view>
 					<view class="fs-21" style="line-height: 1.2;" v-else>采购商品（种类）</view>
@@ -71,7 +85,16 @@ export default {
 					type: 2
 				}
 			],
-			typeTab: 1
+			typeTab: 1,
+			chartData: {
+				categories: ['2016', '2017', '2018', '2019', '2020', '2021'],
+				series: [
+					{
+						name: '',
+						data: [35, 36, 31, 33, 13, 34]
+					}
+				]
+			}
 		};
 	},
 	methods: {
@@ -81,15 +104,15 @@ export default {
 		tabOne: function(item) {
 			this.typeTab = item;
 		},
-		goUrl:function(item){
+		goUrl: function(item) {
 			uni.navigateTo({
-				url:'./' + item
-			})
+				url: './' + item
+			});
 		},
-		goUrlD:function(){
+		goUrlD: function() {
 			uni.navigateTo({
-				url:'./details?type=' + this.active
-			})
+				url: './details?type=' + this.active
+			});
 		}
 	}
 };
@@ -137,5 +160,48 @@ export default {
 	color: #293539;
 	display: inline-block;
 }
+.eacher_moudel {
+	background-color: #979d9f;
+	height: 410upx;
+	padding-top: 20upx;
+	.eacher {
+		width: 90%;
+		margin-left: 5%;
+		height: 340upx;
+		border-left: 1px solid #ffffff;
+		border-bottom: 1px solid #ffffff;
+		.item_border {
+			border-right: 1px dashed #c5c9ca;
+			width: 1px;
+			height: 330upx;
+			margin-left: 10%;
+			display: inline-block;
+		}
+		.item_number {
+			margin-top: -355upx;
+			.number_moudel {
+				height: 40upx;
+				line-height: 40upx;
+				background: linear-gradient(270deg, #98d0ab 0%, rgba(151, 157, 159, 0) 100%);
+				opacity: 1;
+				border-radius: 0upx 21upx 21upx 0upx;
+				width: 60%;
+				font-size: 21upx;
+				color: #ffffff;
+			}
+		}
+	}
 
+	.item_moudel {
+		width: 90%;
+		margin-left: 5%;
+		.item {
+			display: inline-block;
+			width: 10%;
+			font-size: 21upx;
+			color: #c5c9ca;
+			text-align: right;
+		}
+	}
+}
 </style>

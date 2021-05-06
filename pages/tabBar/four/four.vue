@@ -10,51 +10,48 @@
 			<view class="moudel_width">
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">名称：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入名称" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input v-model="comName" class="" placeholder="请输入名称" type="text" /></view>
 				</view>
 
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">联系人：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入联系人" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input v-model="leader" class="" placeholder="请输入联系人" type="text" /></view>
 				</view>
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">电话：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入电话" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input v-model="phone" maxlength="11" type="number" class="" placeholder="请输入电话" /></view>
 				</view>
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">身份：</view>
 					<view class="wp-80 fs-25">
-						<picker @change="bindPickerChange" :range="array" >
-							<label class="">{{ array[index] }}</label>
+						<picker @change="bindPickerChange" :range="array" range-key="name">
+							<label class="">{{ array[index].name }}</label>
 						</picker>
 					</view>
 				</view>
 
-				<view class="btn_bd" @click="okEdit">确认</view>
+				<view class="btn_bd" @click="addPeople">确认</view>
 			</view>
-		
 		</block>
-		
+
 		<block v-else>
 			<view class="moudel_width">
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">原密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入原密码" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input class="" placeholder="请输入原密码" type="text" /></view>
 				</view>
-			
+
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">新密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入新密码" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input class="" placeholder="请输入新密码" type="text"  /></view>
 				</view>
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">新密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请再次输入新密码" type="text" :value="name" :moudel="name" @input="getName" /></view>
+					<view class="wp-80 fs-25"><input class="" placeholder="请再次输入新密码" type="text"  /></view>
 				</view>
-				
-			
+
 				<view class="btn_bd" @click="okEdit">确认</view>
 			</view>
-					
 		</block>
 	</view>
 </template>
@@ -75,16 +72,69 @@ export default {
 			],
 			typeTab: 1,
 			array: [
-				'请选择联系人身份',
-				'供应商',
-				'经销商'
+				{
+					name: '请选择联系人身份',
+					comType: ''
+				},
+				{
+					name: '供应商',
+					comType: 'supplier'
+				},
+				{
+					name: '经销商',
+					comType: 'dealer'
+				}
 			],
-			index: 0
+			index: 0,
+
+			comName: '',
+			phone: '',
+			leader: ''
 		};
+	},
+	onLoad() {
+		
 	},
 	methods: {
 		tabOne: function(item) {
 			this.typeTab = item;
+		},
+		bindPickerChange: function(e) {
+			console.log(e.detail.value);
+			this.index = e.detail.value;
+		},
+		// 添加联系人
+		addPeople: function() {
+			let data = {
+				comType: this.array[this.index].comType,
+				comName: this.comName,
+				phone: this.phone,
+				leader: this.leader
+			};
+			if (!this.comName || !this.phone || !this.leader) {
+				uni.showToast({
+					title: '有数据未填写',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+				return;
+			}
+			this.$http.post('/system/company/add/party', data, true).then(res => {
+				console.log(JSON.stringify(res));
+				if (res.data.code == 200) {
+					uni.navigateTo({
+						url: './add?shareId=' + res.data.data
+					});
+				}else{
+					uni.showToast({
+						title:res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					})
+				}
+			});
 		}
 	}
 };

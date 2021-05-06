@@ -65,6 +65,9 @@ export default {
 .bor_bottom_s {
 	border-bottom: 1px solid #a77845;
 }
+.border_bottom_r{
+	border-bottom: 1px solid #fbc941;
+}
 .listName {
 	background-color: #cab88f;
 	height: 80upx;

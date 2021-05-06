@@ -105,19 +105,13 @@ export default class Request {
 
 	post(url,data,noHeard,type,logFalg,options = {},) {
 		// console.log(noHeard +  'bearer' + uni.getStorageSync('token'))
-		if (type) {
-			options.header = {
-					'Content-Type': 'application/json;charset=UTF-8',
-				}
-		}else{
-			options.header = {
-				'content-type': 'application/x-www-form-urlencoded', // 默认值 
+		options.header = {
+				'Content-Type': 'application/json;charset=UTF-8',
 			}
-		}
 		if(noHeard){
 			options.header = {
-				'Authorization': 'Bearer'  +  ' ' + uni.getStorageSync('token'),
-				'client': 'APP',
+				'Authorization': uni.getStorageSync('token'),
+				// 'client': 'APP',
 				...options.header
 			}
 		}

@@ -24,7 +24,13 @@
 		</view>
 		<view class="moudel_width">
 			<view class="tab_moudel  pl-30 pr-20 pb-30">
-				<view :class="typeTwo == item.type ? 'bg-ca color-ff' : ''" class="item" @click="twoSwcih(item.type)" v-for="(item, index) in twoList" :key="index">
+				<view class="flex">
+					<view :class="typeTwo == item.type ? 'bg-ca color-ff' : ''" class="item" @click="twoSwcih(item.type)" v-for="(item, index) in twoList" :key="index">
+						<view class="wp-80 text-center" :class="item.title.length > 3 ? '' : 'item_line'" style="margin-left: 10%;height: 110upx;">{{ item.title }}</view>
+					</view>
+				</view>
+
+				<view :class="typeTwo == item.type ? 'bg-ca color-ff' : ''" class="item" @click="twoSwcih(item.type)" v-for="(item, index) in twolistA" :key="index">
 					<view class="wp-80 text-center" :class="item.title.length > 3 ? '' : 'item_line'" style="margin-left: 10%;height: 110upx;">{{ item.title }}</view>
 				</view>
 			</view>
@@ -60,7 +66,7 @@
 							<view class=" ">商品：硬粟米（1级）</view>
 							<view class="flex justify-between">
 								<view class="">订单状态：未提交</view>
-								<view class="color-a7" @click="goUrl" v-if="typeTwo == 1 || typeTwo == 4 || typeTwo == 8">点击查看</view>
+								<view class="color-a7" @click="goUrl" v-if="typeTwo == 1 || typeTwo == 4 || typeTwo == 8 || typeTwo == 3">点击查看</view>
 							</view>
 						</view>
 					</view>
@@ -147,7 +153,10 @@ export default {
 				{
 					title: '待发货',
 					type: 4
-				},
+				}
+			],
+			typeTwo: 1,
+			twolistA: [
 				{
 					title: '已发货',
 					type: 5
@@ -164,9 +173,8 @@ export default {
 					title: '已取消',
 					type: 8
 				}
-			],
-
-			typeTwo: 1
+			]
+		
 		};
 	},
 	methods: {
@@ -191,6 +199,7 @@ export default {
 						type: 4
 					}
 				];
+				this.twolistA=[]
 			} else {
 				this.twoList = [
 					{
@@ -208,24 +217,27 @@ export default {
 					{
 						title: '待发货',
 						type: 4
-					},
-					{
-						title: '已发货',
-						type: 5
-					},
-					{
-						title: '已收货',
-						type: 6
-					},
-					{
-						title: '已付款',
-						type: 7
-					},
-					{
-						title: '已取消',
-						type: 8
 					}
 				];
+				this.twolistA = [
+				{
+					title: '已发货',
+					type: 5
+				},
+				{
+					title: '已收货',
+					type: 6
+				},
+				{
+					title: '已付款',
+					type: 7
+				},
+				{
+					title: '已取消',
+					type: 8
+				}
+			]
+		
 			}
 			this.typeTab = item;
 		},
@@ -389,7 +401,7 @@ export default {
 	border-radius: 3upx;
 	margin-top: -70upx;
 	.item {
-		display: inline-grid;
+		display: inline-block;
 		width: 23%;
 		margin-right: 2%;
 		background-color: #ffffff;

@@ -6,7 +6,7 @@ let token = uni.getStorageSync('token');
 
 http.setConfig((config) => { /* 设置全局配置 */
 	if (process.env.VUE_APP_PLATFORM === 'h5') {
-		config.baseUrl = 'https://www.hcselected.com/service';
+		config.baseUrl = 'http://121.89.193.22:9090';
 		 // config.baseUrl = 'http://rdquvc.natappfree.cc';
 		// console.log('开发环境H5')　　　　　　　　　　　　　　
 	} else {

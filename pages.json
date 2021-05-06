@@ -59,7 +59,7 @@
 		}, {
 			"path": "pages/tabBar/four/four",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": false
 			}
 
@@ -143,10 +143,19 @@
             }
             
         }
+        ,{
+            "path" : "pages/tabBar/four/add",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加联系人",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "小米商城",
 		"navigationBarBackgroundColor": "#A77845"
 	},
 	"tabBar": {

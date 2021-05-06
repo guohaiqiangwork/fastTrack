@@ -1,36 +1,44 @@
 <template>
 	<view class="moudel_width">
 		<view class="moudel_list mt-30">
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">公司名称</view>
 
-				<view class="ml-30 fs-30"><input type="number" maxlength="11" @input="keyPhone" placeholder="请输入公司名称" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30"><input v-model="comName" placeholder="请输入公司名称" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">银行卡号</view>
-				<view class="ml-30 fs-30"><input type="number" maxlength="11" @input="keyPhone" placeholder="请输入银行卡号" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 wp-75"><input v-model="bankAccount" maxlength="19" type="number" placeholder="请输入银行卡号" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">身份证号</view>
-				<view class="ml-30 fs-30"><input type="number" maxlength="11" @input="keyPhone" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 wp-75"><input v-model="cardId" maxlength="18" type="number" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">联系人</view>
-				<view class="ml-30 fs-30"><input type="number" maxlength="11" @input="keyPhone" placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30"><input v-model="userName" type="text" placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">联系电话</view>
-				<view class="ml-30 fs-30"><input type="number" maxlength="11" @input="keyPhone" placeholder="请输入联系电话" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30"><input v-model="phone" type="number" maxlength="11" placeholder="请输入联系电话" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+				<view class="wp-20 fs-30 color-33">地址</view>
+				<view class="ml-30 fs-30 wp-80"><input v-model="address" type="text" placeholder="请输入地址" placeholder-style="color:#cccccc" /></view>
+			</view>
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+				<view class="wp-20 fs-30 color-33">邮箱</view>
+				<view class="ml-30 fs-30"><input v-model="email" placeholder="请输入邮箱" placeholder-style="color:#cccccc" /></view>
+			</view>
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">密码设置</view>
-				<view class="ml-30 fs-30 "><input type="password" @input="keyPassword" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 "><input v-model="password" type="password" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex  padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">验证码</view>
 				<view class="flex wp-90">
 					<view class="font_size28   " style="margin-left: 5.3%;width: 67%;">
-						<input type="number" maxlength="6" @input="keyCode" placeholder="请输入验证码" placeholder-style="color:#cccccc" />
+						<input v-model="valCode" type="number" maxlength="6" placeholder="请输入验证码" placeholder-style="color:#cccccc" />
 					</view>
 					<view class="wp_33 text-center fs-30 color-f5" @click="yzm_function">
 						{{ countdown }}
@@ -38,11 +46,9 @@
 					</view>
 				</view>
 			</view>
-
 		</view>
 
-		<view class="btn_bd" @click="funBindMobileAndIdCard">确认</view>
-	
+		<view class="btn_bd" @click="getRegister">确认</view>
 	</view>
 </template>
 
@@ -52,49 +58,105 @@ export default {
 		return {
 			countdown: '获取验证码',
 			timestatus: false,
+
+			address: '',
+			bankAccount: '',
+			cardId: '',
+			comName: '',
+			email: '',
 			password: '',
-			password1: '',
-			userPhone: ''
+			phone: '',
+			userName: '',
+			valCode: '',
+			shareId: '',
+			
+			title:''
 		};
 	},
 	mounted() {
-		// if(uni.getStorageSync('userId')){
-		// 	this.getMyData()
-		// }
+
 	},
 	onLoad(option) {
-		this.falgInput = option.urlFalg || 'login';
+		console.log(JSON.stringify(option.shareId) + '验证码数据');
+		if(option.shareId){
+			this.shareId = option.shareId;
+			this.title = option.title;
+			uni.setNavigationBarTitle({
+				title: this.title
+			});
+			this.getMydata()
+		}
 	},
 	methods: {
-		// 获取手机号
-		keyPhone: function(e) {
-			console.log(e);
-			this.userPhone = e.target.value;
-		},
-		// 验证码
-		keyCode: function(e) {
-			this.phoneCode = e.target.value;
-		},
-		keyPassword: function(e) {
-			this.password = e.target.value;
-		},
-		keyPassword1: function(e) {
-			this.password1 = e.target.value;
-		},
-
-		getMyData: function() {
+		// 用户进行注册
+		getRegister: function() {
 			var data = {
-				mbId: uni.getStorageSync('userId')
+				address: this.address,
+				bankAccount: this.bankAccount,
+				cardId: this.cardId,
+				comName: this.comName,
+				email: this.email,
+				password: this.password,
+				phone: this.phone,
+				userName: this.userName,
+				valCode: this.valCode
 			};
-			// 获取个人信息
-			this.$http.get('/api/member/center/info', data, true).then(res => {
+			let dataUrl = '/register'
+			// 判断是注册还是补全流程
+			if (this.shareId) {
+				data.shareId = this.shareId;
+				 dataUrl = '/bind'
+			}
+			console.log(JSON.stringify(data))
+			if (!this.address || !this.bankAccount || !this.cardId || !this.comName || !this.password || !this.phone || !this.userName || !this.valCode) {
+				uni.showToast({
+					title: '有数据未填写',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+				return;
+			}
+			console.log(JSON.stringify(data));
+			// 注册 和信息补全
+			this.$http.post(dataUrl, data).then(res => {
 				if (res.data.code == 200) {
-					console.log(JSON.stringify(res));
-					// this.infoData = res.data.data
-					this.userPhone = res.data.data.mobile;
+					uni.navigateBack();
+				}else{
+					uni.showToast({
+						title:res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
+					// uni.navigateTo({
+					// 	url:'../model/model?title=' + '关联账户' + '&type=register'
+					// })
 				}
 			});
 		},
+
+		// 获取用户公司信息
+		getMydata:function(){
+			this.$http.get('/party/detail/' +this.shareId ,'',true).then(res =>{
+				console.log(res)
+				if (res.data.code == 200) {
+					this.userName = res.data.data.leader;
+					this.comName = res.data.data.comName;
+					this.phone = res.data.data.phone;
+				}else{
+					uni.showToast({
+						title:res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
+				}
+			})
+		},
+
+
+
 
 		// 获取验证码
 		yzm_function: function() {
@@ -156,10 +218,12 @@ export default {
 		},
 
 		funBindMobileAndIdCard: function() {
-			uni.navigateTo({
-				url:'../model/model?title=' + '关联账户' + '&type=register'
-			})
-			return
+			
+			return;
+			uni.reLaunch({
+				url: '../model/noModel?title=' + '注册提示' + '&type=tips'
+			});
+
 			if (!this.phoneCode || this.phoneCode.length < 6) {
 				uni.showToast({
 					title: '请检查验证码',
@@ -253,7 +317,7 @@ page {
 
 .btn_bd {
 	height: 90upx;
-	background: #98D0AB;
+	background: #98d0ab;
 	border-radius: 10upx;
 	text-align: center;
 	align-items: center;
@@ -264,6 +328,6 @@ page {
 	border-radius: 50upx;
 	position: absolute;
 	bottom: 5%;
-	width: 94%;
+	width: 90%;
 }
 </style>
