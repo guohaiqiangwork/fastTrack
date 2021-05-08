@@ -48,7 +48,7 @@
 							<view class=" ">{{ item.buyerMobile }}</view>
 							<view class="flex justify-between">
 								<view class=""></view>
-								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 'waiting_provider_confirm' && typeTwo != 'waiting_send_goods' && typeTwo != 'received_goods' && typeTwo != 'paid_money' && typeTwo != 'sent_goods'">点击查看</view>
+								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 'waiting_provider_confirm' && typeTwo != 'waiting_send_goods' && typeTwo != 'received_goods' && typeTwo != 'paid_money'">点击查看</view>
 							</view>
 						</view>
 					</view>

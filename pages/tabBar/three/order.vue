@@ -73,7 +73,7 @@
 						<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
 						<view class="wp-50" @click="okOrder('true')">同意</view>
 					</view>
-					<view class="two_btn justify-center" v-else>点击收货</view>
+					<view class="two_btn justify-center" v-if="false">点击收货</view>
 				</block>
 				<block v-else>
 					<view class="moudel_list mt-40 pt-20">
