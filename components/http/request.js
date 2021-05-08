@@ -89,9 +89,6 @@ export default class Request {
 	}
 
 	get(url, data, noHeard, options = {}) {
-		// console.log('第一个' + url)
-		// console.log('第2个' + data)
-		// console.log('第3个' + noHeard)
 		options.url = url
 		options.data = data
 		options.method = 'GET'
@@ -104,6 +101,36 @@ export default class Request {
 		}
 
 		return this.request(options)
+	}
+	//put请求
+	put(url, data, noHeard, options = {}) {
+		options.url = url
+		options.data = data
+		options.method = 'PUT'
+		if (noHeard) {
+			options.header = {
+				'Authorization': 'Bearer' + ' ' + uni.getStorageSync('token'),
+				'client': 'APP',
+				...options.header
+			}
+		}
+		return this.request(options)
+	}
+
+	//delete请求
+	delete(url, data, noHeard, options = {}) {
+		options.url = url
+		options.data = data
+		options.method = 'DELETE'
+		if (noHeard) {
+			options.header = {
+				'Authorization': 'Bearer' + ' ' + uni.getStorageSync('token'),
+				'client': 'APP',
+				...options.header
+			}
+		}
+		return this.request(options)
+
 	}
 
 	post(url, data, noHeard, type, logFalg, options = {}, ) {

@@ -13,11 +13,11 @@
 		<view class="moudel_list  pb-40" v-if="model == 'product'">
 			<view class="flex pt-30">
 				<view class="fs-25 color-29 wp-20 mt-25 text-center">名称：</view>
-				<view class="wp-80 "><input class="input_m pl-20" type="text" value="" placeholder="请输入名称" /></view>
+				<view class="wp-80 "><input class="input_m pl-20" v-model="productName" type="text" value="" placeholder="请输入名称" /></view>
 			</view>
 			<view class="flex pt-30">
 				<view class="fs-25 color-29 wp-20 mt-25 text-center">单价：</view>
-				<view class="wp-80 "><input class="input_m pl-20" type="text" value="" placeholder="请输入单价" /></view>
+				<view class="wp-80 "><input class="input_m pl-20" v-model="productPrice" type="text" value="" placeholder="请输入单价" /></view>
 			</view>
 
 			<view class="btn_bd mt-60" @click="okButtom">确认</view>
@@ -50,7 +50,9 @@ export default {
 			title: '',
 			listName: '', //订单页新增商品
 			number: '', //重量
-			prictAll: ''
+			prictAll: '',
+			productName: '',
+			productPrice: ''
 		};
 	},
 	onLoad(option) {
@@ -60,7 +62,10 @@ export default {
 		if (option.listName) {
 			this.listName = option.listName;
 			this.price = option.price;
-			this.productId = option.productId
+			this.productId = option.productId;
+		}
+		if (option.typeId) {
+			this.typeId = option.typeId;
 		}
 		uni.setNavigationBarTitle({
 			title: this.title
@@ -82,7 +87,31 @@ export default {
 					url: './noModel'
 				});
 			} else if (this.model == 'product') {
-				uni.navigateBack({});
+				let data = {
+					typeId: this.typeId,
+					productName: this.productName,
+					price: Number(this.productPrice)
+				};
+
+				this.$http.post('/system/product', data, true).then(res => {
+					console.log(res);
+					if (res.data.code == 200) {
+						uni.showToast({
+							title: '添加成功',
+							time: 2000,
+							icon: 'none'
+						});
+						setTimeout(function() {
+							uni.navigateBack({});
+						}, 1500);
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							time: 2000,
+							icon: 'none'
+						});
+					}
+				});
 			} else if (this.model == 'two') {
 				let that = this;
 				console.log('00');
@@ -90,7 +119,7 @@ export default {
 					weight: this.number,
 					price: this.price,
 					productName: this.listName,
-					 productId: Number(this.productId),
+					productId: Number(this.productId),
 					type: 1
 				};
 				if (!this.number) {

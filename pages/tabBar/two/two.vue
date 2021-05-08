@@ -182,10 +182,6 @@ export default {
 			this.consigneeData.leader = uni.getStorageSync('leader');
 			this.consigneeData.bankAccount = uni.getStorageSync('bankAccount');
 		}
-
-		if (option) {
-			console.log(option);
-		}
 	},
 	onShow(option) {
 		console.log(option);
@@ -229,7 +225,6 @@ export default {
 					let dataList = [];
 					if (resData.details.length > 0) {
 						for (let i = 0; i < resData.details.length; i++) {
-							// console.log(resData.details[i]);
 							let item = {
 								productId: Number(resData.details[i].productId),
 								productName: resData.details[i].productName,
@@ -253,6 +248,9 @@ export default {
 		if (uni.getStorageSync('fromFalg')) {
 			uni.setStorageSync('fromFalg', '');
 			this.productlist = [];
+			this.consignorData=''
+			this.totalPrice =0
+			this.fromFalg = ''
 		}
 	},
 	methods: {

@@ -17,7 +17,7 @@
  */
 
 // 主题颜色配置：如每个图表类型需要不同主题，请在对应图表类型上更改color属性
-const color = ['#1890FF', '#91CB74', '#FAC858', '#EE6666', '#73C0DE', '#3CA272', '#FC8452', '#9A60B4', '#ea7ccc'];
+const color = ['#FBC941', '#91CB74', '#FAC858', '#EE6666', '#73C0DE', '#3CA272', '#FC8452', '#9A60B4', '#ea7ccc'];
 
 module.exports = {
 	//demotype为自定义图表类型
@@ -237,28 +237,25 @@ module.exports = {
 			},
 		}
 	},
+
 	"column": {
 		"type": "column",
 		"canvasId": "",
 		"canvas2d": false,
-		"background": "#979D9F",
+		"background": "none",
 		"animation": true,
 		"timing": "easeOut",
 		"duration": 1000,
-		"color": [
-			"#979D9F",
-			"#FBC941"
-		],
 		"padding": [
 			15,
 			15,
 			0,
 			5
 		],
-		"rotate": true,
+		"rotate": false,
 		"reserve": false,
 		"fontSize": 13,
-		"fontColor": "#ffffff",
+		"fontColor": "#666666",
 		"enableScroll": false,
 		"touchMoveLimit": 60,
 		"enableMarkLine": false,
@@ -266,15 +263,15 @@ module.exports = {
 		"dataPointShape": true,
 		"dataPointShapeType": "solid",
 		"xAxis": {
-			"disabled": true,
+			"disabled": false,
 			"axisLine": false,
-			"axisLineColor": "#ffffff",
+			"axisLineColor": "#CCCCCC",
 			"calibration": false,
 			"fontColor": "#ffffff",
 			"fontSize": 13,
-			"rotateLabel": false,
+			"rotateLabel": true,
 			"itemCount": 5,
-			"boundaryGap": "justify",
+			"boundaryGap": "center",
 			"disableGrid": true,
 			"gridColor": "#CCCCCC",
 			"gridType": "dash",
@@ -286,18 +283,18 @@ module.exports = {
 			"scrollBackgroundColor": "#EFEBEF"
 		},
 		"yAxis": {
-			"disabled": false,
+			"disabled": true,
 			"disableGrid": false,
 			"splitNumber": 5,
 			"gridType": "dash",
 			"dashLength": 8,
-			"gridColor": "#ffffff",
+			"gridColor": "#CCCCCC",
 			"padding": 10,
 			"showTitle": false,
 			"data": []
 		},
 		"legend": {
-			"show": true,
+			"show": false,
 			"position": "bottom",
 			"float": "center",
 			"padding": 5,
@@ -319,29 +316,31 @@ module.exports = {
 				"categoryGap": 3,
 				"barBorderCircle": true,
 				"linearType": "custom",
-				"linearOpacity": 1,
+				"linearOpacity": 0.6,
 				"customColor": [
-					"#98D0AB"
+					"#FBC941"
 				],
-				"colorStop": 0.5,
+				"colorStop": 1,
 				"meterBorder": 1,
 				"meterFillColor": "#FFFFFF",
 				"activeBgColor": "#000000",
 				"activeBgOpacity": 0.08,
 				"meterBorde": 1
+
 			},
+
 			"tooltip": {
-				"showBox": true,
+				"showBox": false,
 				"showArrow": true,
 				"borderWidth": 0,
 				"borderRadius": 0,
-				"borderColor": "#ffffff",
+				"borderColor": "#000000",
 				"borderOpacity": 0.7,
-				"bgColor": "#ffffff",
+				"bgColor": "#000000",
 				"bgOpacity": 0.7,
 				"gridType": "solid",
 				"dashLength": 4,
-				"gridColor": "#ffffff",
+				"gridColor": "#CCCCCC",
 				"fontColor": "#FFFFFF",
 				"splitLine": true,
 				"horizentalLine": false,
@@ -349,7 +348,7 @@ module.exports = {
 				"yAxisLabel": false,
 				"labelBgColor": "#FFFFFF",
 				"labelBgOpacity": 0.7,
-				"labelFontColor": "#ffffff"
+				"labelFontColor": "#666666"
 			},
 			"markLine": {
 				"type": "solid",

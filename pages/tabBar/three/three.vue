@@ -48,7 +48,7 @@
 							<view class=" ">{{ item.buyerMobile }}</view>
 							<view class="flex justify-between">
 								<view class=""></view>
-								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 2 && typeTwo != 4 && typeTwo != 6 && typeTwo != 7">点击查看</view>
+								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 'waiting_provider_confirm' && typeTwo != 'waiting_send_goods' && typeTwo != 'received_goods' && typeTwo != 'paid_money' && typeTwo != 'sent_goods'">点击查看</view>
 							</view>
 						</view>
 					</view>
@@ -314,17 +314,17 @@ export default {
 							break;
 						case 'waiting_self_confirm':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=1'
+								url: './order?title=采购单' + '&type=1' + '&orderId='+ dataItem.id
 							});
 							break;
 						case 'sent_goods':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=5'
+								url: './order?title=采购单' + '&type=5'+ '&orderId='+ dataItem.id
 							});
 							break;
 						case 'cancelled':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=8'
+								url: './order?title=采购单' + '&type=8'+ '&orderId='+ dataItem.id
 							});
 							break;
 					}
