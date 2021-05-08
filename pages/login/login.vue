@@ -61,7 +61,7 @@ export default {
 				username: this.username,
 				password: this.password
 			};
-			if (!this.username || !this.password ) {
+			if (!this.username || !this.password) {
 				uni.showToast({
 					title: '有数据未填写',
 					icon: 'none',
@@ -71,24 +71,34 @@ export default {
 				return;
 			}
 			this.$http.post('/login', data).then(res => {
-				console.log(JSON.stringify(res) )
-				if(res.data.code == 200 ){
+				console.log(JSON.stringify(res));
+				if (res.data.code == 200) {
 					uni.setStorageSync('token', res.data.token);
-					this.$http.get('/system/company/self','',true).then(res=>{
-						if(res.data.code == 200){
-							console.log(res)
-							uni.setStorageSync('comType', res.data.data.comType);//身份标识
-							uni.setStorageSync('comName', res.data.data.comName);//公司名称
-							uni.setStorageSync('address', res.data.data.address);//公司地址
-							uni.setStorageSync('shareId', res.data.data.shareId);//分享id
+					this.$http.get('/system/company/self', '', true).then(res => {
+						if (res.data.code == 200) {
+							console.log(res);
+							uni.setStorageSync('comType', res.data.data.comType); //身份标识
+							uni.setStorageSync('comName', res.data.data.comName); //公司名称
+							uni.setStorageSync('address', res.data.data.address); //公司地址
+							uni.setStorageSync('shareId', res.data.data.shareId); //分享id
+							uni.setStorageSync('phone', res.data.data.phone); //手机号
+							uni.setStorageSync('leader', res.data.data.leader); //联系人名称
+							uni.setStorageSync('comId', res.data.data.comId); //用户ID
+							uni.setStorageSync('bankAccount', res.data.data.bankAccount); //存储银行卡号
+
 							uni.switchTab({
 								url: '../tabBar/one/one'
 							});
 						}
 					});
-					
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
 				}
-				
 			});
 		}
 	}

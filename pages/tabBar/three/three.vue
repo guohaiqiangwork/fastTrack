@@ -37,43 +37,46 @@
 
 			<scroll-view scroll-y="true" class="pb-80" :style="typeTab == 3 ? 'height: 55vh;' : 'height: 45vh'">
 				<!-- 采购单 -->
-				<block v-if="typeTab == 1">
-					<view class=" mt-30" v-for="(item, index) in [1, 2, 3]" :key="index">
+				<block v-if="typeTab == 'b'">
+					<view v-if="orderList.length > 0" class=" mt-30" v-for="(item, index) in orderList" :key="index">
 						<view style="background-color: #FBC941;" class="flex justify-between fs-25 color-ff pt-20 pb-20 pl-20 pr-20">
-							<view class="">订单号：2021122000001</view>
-							<view class="">日期：2021-12-20</view>
+							<view class="">订单号：{{ item.id }}</view>
+							<view class="">日期：{{ item.createTime.substring(5) }}</view>
 						</view>
 						<view class="moudel_list pb-20  pt-20 fs-25 color-29" style="border-radius: 0;">
-							<view class="fs-32 color-a7 fw-700 ">河北兴农谷物销售有限公司</view>
-							<view class=" ">商品：硬粟米（1级）</view>
+							<view class="fs-32 color-a7 fw-700 ">{{ item.buyerName }}</view>
+							<view class=" ">{{ item.buyerMobile }}</view>
 							<view class="flex justify-between">
-								<view class="">订单状态：未提交</view>
-								<view class="color-a7" @click="goUrl" v-if="typeTwo != 2 && typeTwo != 4 && typeTwo != 6 && typeTwo != 7">点击查看</view>
+								<view class=""></view>
+								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 2 && typeTwo != 4 && typeTwo != 6 && typeTwo != 7">点击查看</view>
 							</view>
 						</view>
 					</view>
+					<view class="fs-32 color-33 mt-50 text-center" v-if="orderList.length == 0">暂无数据</view>
 				</block>
 
 				<!-- 销售单 -->
-				<block v-if="typeTab == 2">
-					<view class=" mt-30" v-for="(item, index) in [1, 2, 3]" :key="index">
+				<block v-if="typeTab == 's'">
+					<view class=" mt-30" v-for="(item, index) in orderList" :key="index">
 						<view style="background-color: #FBC941;" class="flex justify-between fs-25 color-ff pt-20 pb-20 pl-20 pr-20">
-							<view class="">订单号：2021122000001</view>
-							<view class="">日期：2021-12-20</view>
+							<view class="">订单号：{{ item.id }}</view>
+							<view class="">日期：{{ item.createTime.substring(5) }}</view>
 						</view>
 						<view class="moudel_list pb-20  pt-20 fs-25 color-29" style="border-radius: 0;">
-							<view class="fs-32 color-a7 fw-700 ">河北兴农谷物销售有限公司</view>
-							<view class=" ">商品：硬粟米（1级）</view>
+							<view class="fs-32 color-a7 fw-700 ">{{ item.buyerName }}</view>
+							<view class=" ">{{ item.buyerMobile }}</view>
+							<!-- <view class=" ">商品：硬粟米（1级）</view> -->
 							<view class="flex justify-between">
-								<view class="">订单状态：未提交</view>
+								<view class=""></view>
 								<view class="color-a7" @click="goUrl" v-if="typeTwo == 1 || typeTwo == 4 || typeTwo == 8 || typeTwo == 3">点击查看</view>
 							</view>
 						</view>
 					</view>
+					<view class="fs-32 color-33 mt-50 text-center" v-if="orderList.length == 0">暂无数据</view>
 				</block>
 
 				<!-- 发货单 -->
-				<block v-if="typeTab == 3">
+				<block v-if="typeTab == 's1'">
 					<view class=" mt-30" v-for="(item, index) in [1, 2, 3]" :key="index">
 						<view style="background-color: #FBC941;" class="flex justify-between fs-25 color-ff pt-20 pb-20 pl-20 pr-20">
 							<view class="">订单号：2021122000001</view>
@@ -103,8 +106,10 @@ function getDate(type) {
 
 	if (type === 'start') {
 		year = year;
+		month = month - 1;
 	} else if (type === 'end') {
-		year = year + 1;
+		year = year;
+		month = month;
 	}
 	month = month > 9 ? month : '0' + month;
 	day = day > 9 ? day : '0' + day;
@@ -117,19 +122,19 @@ export default {
 			tabList: [
 				{
 					title: '采购单管理',
-					type: 1
+					type: 'b'
 				},
 				{
 					title: '销售单管理',
-					type: 2
+					type: 's'
 				},
 
 				{
 					title: '发货单管理',
-					type: 3
+					type: 's1'
 				}
 			],
-			typeTab: 2,
+			typeTab: 'b',
 			startDateOne: getDate('start'),
 			endDateOne: getDate('end'),
 			startDate: '1993-01-01',
@@ -140,55 +145,100 @@ export default {
 			twoList: [
 				{
 					title: '未提交',
-					type: 1
+					type: 'new'
 				},
 				{
 					title: '待供应商确认',
-					type: 2
+					type: 'waiting_provider_confirm'
 				},
 				{
 					title: '待己方确认',
-					type: 3
+					type: 'waiting_self_confirm'
 				},
 				{
 					title: '待发货',
-					type: 4
+					type: 'waiting_send_goods'
 				}
 			],
-			typeTwo: 1,
+			typeTwo: 'new',
 			twolistA: [
 				{
 					title: '已发货',
-					type: 5
+					type: 'sent_goods'
 				},
 				{
 					title: '已收货',
-					type: 6
+					type: 'received_goods'
 				},
 				{
 					title: '已付款',
-					type: 7
+					type: 'paid_money'
 				},
 				{
 					title: '已取消',
-					type: 8
+					type: 'cancelled'
 				}
-			]
-		
+			],
+			orderList: []
 		};
 	},
+
+	onShow() {
+		// 加工商订单创建过来的
+		// if (uni.getStorageSync('threeFalg') == 'cg') {
+		// 	this.typeTab = 'b';
+		// 	if (uni.getStorageSync('threeFalgType') == 0) {
+		// 		this.typeTwo = 'new';
+		// 	}
+		// }
+		this.getList();
+	},
+	onLoad() {},
 	methods: {
+		// 订单列表获取
+		getList: function() {
+			let data = {
+				type: this.typeTab,
+				status: this.typeTwo,
+				startDate: this.startDateOne,
+				endDate: this.endDateOne
+			};
+			this.$http.post('/system/orders/status', data, true).then(res => {
+				console.log(res);
+				if (res.data.code == 200) {
+					this.orderList = res.data.data;
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						time: 2000,
+						icon: 'none'
+					});
+				}
+			});
+		},
+
+		//获取开始时间
+		bindDateChange: function(e) {
+			console.log(e.detail.value);
+			this.startDateOne = e.detail.value;
+		},
+		// 获取结束时间
+		bindDateChangeEnd: function(e) {
+			console.log(e.detail.value);
+			this.endDateOne = e.detail.value;
+		},
 		tabOne: function(item) {
-			if (item == 3) {
+			console.log('我是谁' + item);
+			if (item == 's1') {
 				this.twoList = [
 					{
 						title: '待采购商确认',
-						type: 1
+						type: 'waiting_dealer_confirm'
 					},
 
 					{
 						title: '待己方确认',
-						type: 2
+						type: 'waiting_self_confirm'
 					},
 					{
 						title: '待付款',
@@ -196,99 +246,107 @@ export default {
 					},
 					{
 						title: '已付款',
-						type: 4
+						type: 'paid_money'
 					}
 				];
-				this.twolistA=[]
+				this.twolistA = [];
+				this.typeTwo = 'waiting_dealer_confirm';
 			} else {
 				this.twoList = [
 					{
 						title: '未提交',
-						type: 1
+						type: 'new'
 					},
 					{
 						title: '待供应商确认',
-						type: 2
+						type: 'waiting_provider_confirm'
 					},
 					{
 						title: '待己方确认',
-						type: 3
+						type: 'waiting_self_confirm'
 					},
 					{
 						title: '待发货',
-						type: 4
+						type: 'waiting_send_goods'
 					}
 				];
 				this.twolistA = [
-				{
-					title: '已发货',
-					type: 5
-				},
-				{
-					title: '已收货',
-					type: 6
-				},
-				{
-					title: '已付款',
-					type: 7
-				},
-				{
-					title: '已取消',
-					type: 8
-				}
-			]
-		
+					{
+						title: '已发货',
+						type: 'sent_goods'
+					},
+					{
+						title: '已收货',
+						type: 'received_goods'
+					},
+					{
+						title: '已付款',
+						type: 'paid_money'
+					},
+					{
+						title: '已取消',
+						type: 'cancelled'
+					}
+				];
+				this.typeTwo = 'new';
 			}
 			this.typeTab = item;
+			this.getList(); //获取列表数据
 		},
 		twoSwcih: function(item) {
 			this.typeTwo = item;
+			this.getList(); //获取列表数据
 		},
 		// 去查看
-		goUrl: function() {
+		goUrl: function(item) {
+			var dataItem = item;
+			console.log(dataItem);
 			switch (this.typeTab) {
-				case 1:
+				case 'b':
 					switch (this.typeTwo) {
-						case 1:
+						case 'new':
+							uni.setStorageSync('orderId', item.id);
+							uni.setStorageSync('threeFalg', 1);
+							uni.setStorageSync('fromFalg', 'three');
 							uni.switchTab({
 								url: '../two/two'
 							});
 							break;
-						case 3:
+						case 'waiting_self_confirm':
 							uni.navigateTo({
 								url: './order?title=采购单' + '&type=1'
 							});
 							break;
-						case 5:
+						case 'sent_goods':
 							uni.navigateTo({
 								url: './order?title=采购单' + '&type=5'
 							});
 							break;
-						case 8:
+						case 'cancelled':
 							uni.navigateTo({
 								url: './order?title=采购单' + '&type=8'
 							});
 							break;
 					}
 					break;
-				case 2:
+				case 's':
 					switch (this.typeTwo) {
-						case 1:
+						case 'new':
 							uni.navigateTo({
 								url: './order?title=销售单' + '&type=5'
 							});
 							break;
-						case 3:
+						case 'waiting_self_confirm':
 							uni.navigateTo({
 								url: './order?title=销售单' + '&type=5'
 							});
 							break;
-						case 4:
+						case 'waiting_send_goods':
 							uni.navigateTo({
 								url: './order?title=销售单' + '&type=4'
 							});
 							break;
-						case 8:
+						case 'cancelled':
 							uni.navigateTo({
 								url: './order?title=销售单' + '&type=8'
 							});
@@ -296,9 +354,9 @@ export default {
 					}
 
 					break;
-				case 3:
+				case 's1':
 					switch (this.typeTwo) {
-						case 2:
+						case 'waiting_self_confirm':
 							uni.navigateTo({
 								url: './issue?title=发货单' + '&type=2'
 							});
@@ -312,7 +370,7 @@ export default {
 
 					break;
 				default:
-					console.log(this, typeTwo);
+					console.log(this.typeTwo);
 			}
 		},
 		// 获取列表

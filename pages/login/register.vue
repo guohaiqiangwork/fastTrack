@@ -69,22 +69,20 @@ export default {
 			userName: '',
 			valCode: '',
 			shareId: '',
-			
-			title:''
+
+			title: ''
 		};
 	},
-	mounted() {
-
-	},
+	mounted() {},
 	onLoad(option) {
 		console.log(JSON.stringify(option.shareId) + '验证码数据');
-		if(option.shareId){
+		if (option.shareId) {
 			this.shareId = option.shareId;
 			this.title = option.title;
 			uni.setNavigationBarTitle({
 				title: this.title
 			});
-			this.getMydata()
+			this.getMydata();
 		}
 	},
 	methods: {
@@ -101,16 +99,25 @@ export default {
 				userName: this.userName,
 				valCode: this.valCode
 			};
-			let dataUrl = '/register'
+			let dataUrl = '/register';
 			// 判断是注册还是补全流程
 			if (this.shareId) {
 				data.shareId = this.shareId;
-				 dataUrl = '/bind'
+				dataUrl = '/bind';
 			}
-			console.log(JSON.stringify(data))
+			console.log(JSON.stringify(data));
 			if (!this.address || !this.bankAccount || !this.cardId || !this.comName || !this.password || !this.phone || !this.userName || !this.valCode) {
 				uni.showToast({
 					title: '有数据未填写',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+				return;
+			}
+			if (this.address.length < 10 || this.address.length > 50) {
+				uni.showToast({
+					title: '地址不能小于10位',
 					icon: 'none',
 					duration: 2000,
 					position: 'center'
@@ -122,9 +129,9 @@ export default {
 			this.$http.post(dataUrl, data).then(res => {
 				if (res.data.code == 200) {
 					uni.navigateBack();
-				}else{
+				} else {
 					uni.showToast({
-						title:res.data.msg,
+						title: res.data.msg,
 						icon: 'none',
 						duration: 2000,
 						position: 'center'
@@ -137,31 +144,28 @@ export default {
 		},
 
 		// 获取用户公司信息
-		getMydata:function(){
-			this.$http.get('/party/detail/' +this.shareId ,'',true).then(res =>{
-				console.log(res)
+		getMydata: function() {
+			this.$http.get('/party/detail/' + this.shareId, '', true).then(res => {
+				console.log(res);
 				if (res.data.code == 200) {
 					this.userName = res.data.data.leader;
 					this.comName = res.data.data.comName;
 					this.phone = res.data.data.phone;
-				}else{
+				} else {
 					uni.showToast({
-						title:res.data.msg,
+						title: res.data.msg,
 						icon: 'none',
 						duration: 2000,
 						position: 'center'
 					});
 				}
-			})
+			});
 		},
-
-
-
 
 		// 获取验证码
 		yzm_function: function() {
 			var that = this;
-			if (!/^1[3456789]\d{9}$/.test(this.userPhone)) {
+			if (!/^1[3456789]\d{9}$/.test(this.phone)) {
 				uni.showToast({
 					title: '请输入正确的11位手机号码',
 					icon: 'none',
@@ -182,8 +186,9 @@ export default {
 			var phoneData = {
 				phone: that.userPhone
 			};
+			let url = '/sms/reg/' + this.phone;
 			that.$http
-				.get('/api/common/mb/sendCode', phoneData, false)
+				.get(url,'', false)
 				.then(res => {
 					if (res.data.code == 200) {
 						that.countdown = 60;
@@ -218,7 +223,6 @@ export default {
 		},
 
 		funBindMobileAndIdCard: function() {
-			
 			return;
 			uni.reLaunch({
 				url: '../model/noModel?title=' + '注册提示' + '&type=tips'

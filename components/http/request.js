@@ -17,7 +17,8 @@ export default class Request {
 		complete() {}
 	}
 
-	static posUrl(url) { /* 判断url是否为绝对路径 */
+	static posUrl(url) {
+		/* 判断url是否为绝对路径 */
 		return /(http|https):\/\/([\w.]+\/?)\S*/.test(url)
 	}
 
@@ -74,10 +75,12 @@ export default class Request {
 				reject(err)
 				next = false
 			}
-			let afC = { ...this.config,
+			let afC = {
+				...this.config,
 				...options
 			}
-			_config = { ...afC,
+			_config = {
+				...afC,
 				...Request.requestBeforeFun(afC, cancel)
 			}
 			if (!next) return
@@ -85,37 +88,37 @@ export default class Request {
 		})
 	}
 
-	get(url, data,noHeard, options = {}) {
+	get(url, data, noHeard, options = {}) {
 		// console.log('第一个' + url)
 		// console.log('第2个' + data)
 		// console.log('第3个' + noHeard)
 		options.url = url
 		options.data = data
 		options.method = 'GET'
-		if(noHeard){
+		if (noHeard) {
 			options.header = {
-				'Authorization': 'Bearer' +' '+ uni.getStorageSync('token'),
+				'Authorization': 'Bearer' + ' ' + uni.getStorageSync('token'),
 				'client': 'APP',
 				...options.header
 			}
 		}
-		
+
 		return this.request(options)
 	}
 
-	post(url,data,noHeard,type,logFalg,options = {},) {
+	post(url, data, noHeard, type, logFalg, options = {}, ) {
 		// console.log(noHeard +  'bearer' + uni.getStorageSync('token'))
 		options.header = {
-				'Content-Type': 'application/json;charset=UTF-8',
-			}
-		if(noHeard){
+			'Content-Type': 'application/json;charset=UTF-8',
+		}
+		if (noHeard) {
 			options.header = {
 				'Authorization': uni.getStorageSync('token'),
 				// 'client': 'APP',
 				...options.header
 			}
 		}
-		if(logFalg){
+		if (logFalg) {
 			options.header = {
 				'Authorization': "Basic c3lzLW1hbmFnZToxMjM0NTY=",
 				'client': 'APP',

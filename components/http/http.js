@@ -4,10 +4,11 @@ var noLoginFalg = true;
 var noWifiFalg = true
 let token = uni.getStorageSync('token');
 
-http.setConfig((config) => { /* 设置全局配置 */
+http.setConfig((config) => {
+	/* 设置全局配置 */
 	if (process.env.VUE_APP_PLATFORM === 'h5') {
 		config.baseUrl = 'http://121.89.193.22:9090';
-		 // config.baseUrl = 'http://rdquvc.natappfree.cc';
+		// config.baseUrl = 'http://rdquvc.natappfree.cc';
 		// console.log('开发环境H5')　　　　　　　　　　　　　　
 	} else {
 		config.baseUrl = 'http://service.expresslines.cn/';
@@ -20,7 +21,8 @@ http.setConfig((config) => { /* 设置全局配置 */
 	return config
 })
 
-http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
+http.interceptor.request((config, cancel) => {
+	/* 请求之前拦截器 */
 	// config.header = {
 
 	// 	'Authorization': "Bearer " + uni.getStorageSync('token'),
@@ -32,9 +34,10 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 	});
 	return config;
 })
-http.interceptor.response((response) => { /* 请求之后拦截器 */
+http.interceptor.response((response) => {
+	/* 请求之后拦截器 */
 	uni.hideLoading();
-	
+
 	if (response.data.code == 401) {
 		uni.setStorageSync('token', '');
 		uni.reLaunch({
@@ -43,7 +46,8 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 		return
 	}
 	if (response.data) {
-		if (response.data.code == 200 || response.data.code == 300 || response.data.code == 500 || response.statusCode ==
+		if (response.data.code == 200 || response.data.code == 300 || response.data.code == 500 || response
+			.statusCode ==
 			200) {
 			return response;
 		} else {

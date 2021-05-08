@@ -1,24 +1,22 @@
 <template>
 	<view>
 		<view class="bg-ff">
-			<view :class="typeTab == item.type ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.type)" v-for="(item, index) in tabList" :key="index">
+			<view :class="typeTab == item.id ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.id)" v-for="(item, index) in tabList" :key="index">
 				{{ item.title }}
 			</view>
 		</view>
 
 		<view class="mt-30 moudel_width">
-
 			<view
-				@click="tabSwich(index,'硬粟（1级)')"
-				v-for="(item, index) in [1, 2, 3, 4]"
+				@click="tabSwich(index, item)"
+				v-for="(item, index) in productList"
 				:key="index"
 				:class="tabTwo == index ? 'bg-active' : ''"
 				class="flex justify-between moudel_list fs-25 color-29 pt-20 pb-20 mt-30"
 			>
-				<view class="">硬粟（1级）</view>
-				<view class="">单价：4.3（元/KG）</view>
+				<view class="">{{item.productName}}</view>
+				<view class="">单价：{{item.price}}（元/KG）</view>
 			</view>
-		
 		</view>
 	</view>
 </template>
@@ -27,48 +25,77 @@
 export default {
 	data() {
 		return {
-			typeTab: 1,
+			typeTab: -1,
 			tabList: [
 				{
 					title: '全部',
-					type: 1
-				},
-				{
-					title: '油类',
-					type: 2
-				},
-				{
-					title: '豆类',
-					type: 3
-				},
-				{
-					title: '面粉类',
-					type: 4
+					id: -1
 				}
 			],
-			
-			tabTwo: null
+
+			tabTwo: null,
+			productList:[]
 		};
 	},
+	onLoad() {
+		this.getTablist();
+		this.getList();//默认获取全部列表
+	},
 	methods: {
+		// 获取tab
+		getTablist: function() {
+			this.$http.get('/system/productType/treeselect', '', true).then(res => {
+				if (res.data.code == 200) {
+					this.tabList = this.tabList.concat(res.data.data);
+					console.log(this.tabList);
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
+				}
+			});
+		},
+		// 获取列表
+		getList:function(){
+			let geturl = '/system/product/list/' +  this.typeTab
+			this.$http.get(geturl,'', true).then(res => {
+				if (res.data.code == 200) {
+					this.productList = res.data.rows
+					console.log(this.productList)
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
+				}
+			});
+		},
+
 		tabOne: function(item) {
 			this.typeTab = item;
+			this.getList();//默认获取全部列表
 		},
-		tabSwich: function(item,name) {
+		tabSwich: function(item, name) {
 			this.tabTwo = item;
-			this.goModel(name);//去添加商品
+			this.goModel(name); //去添加商品
 		},
-		
-		goUrl:function(item){
+
+		goUrl: function(item) {
 			uni.navigateTo({
-				url:'./' +item
-			})
+				url: './' + item
+			});
 		},
 		// 去添加商品也
-		goModel:function(name){
+		goModel: function(item) {
+			console.log('我在啊这而是')
 			uni.navigateTo({
-					url:'../../model/model?title=添加商品'  + '&type=two' + '&listName=' + name
-			})
+				url: '../../model/model?title=添加商品' + '&type=two' + '&listName=' + item.productName + '&price=' + item.price + '&productId=' + item.id
+			});
 		}
 	}
 };
@@ -84,7 +111,6 @@ export default {
 	color: #293539;
 	display: inline-block;
 }
-
 
 .bg-active {
 	background-color: #e7e7e7;

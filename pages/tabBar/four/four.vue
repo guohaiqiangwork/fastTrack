@@ -38,16 +38,16 @@
 			<view class="moudel_width">
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">原密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入原密码" type="text" /></view>
+					<view class="wp-80 fs-25"><input class="" v-model="currentPassword" placeholder="请输入原密码" type="password" /></view>
 				</view>
 
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">新密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请输入新密码" type="text"  /></view>
+					<view class="wp-80 fs-25"><input class="" v-model="newPassword" placeholder="请输入新密码" type="password" /></view>
 				</view>
 				<view class="input_mo flex">
 					<view class="mt-5 wp-20">新密码：</view>
-					<view class="wp-80 fs-25"><input class="" placeholder="请再次输入新密码" type="text"  /></view>
+					<view class="wp-80 fs-25"><input class="" v-model="confirmPassword" placeholder="请再次输入新密码" type="password" /></view>
 				</view>
 
 				<view class="btn_bd" @click="okEdit">确认</view>
@@ -89,13 +89,47 @@ export default {
 
 			comName: '',
 			phone: '',
-			leader: ''
+			leader: '',
+			currentPassword: '',
+			newPassword: '',
+			confirmPassword: ''
 		};
 	},
-	onLoad() {
-		
-	},
+	onLoad() {},
 	methods: {
+		okEdit: function() {
+			let data = {
+				currentPassword: this.currentPassword,
+				newPassword: this.newPassword,
+				confirmPassword: this.confirmPassword
+			};
+			if (this.newPassword != this.confirmPassword) {
+				uni.showToast({
+					title: '新密码不一致',
+					time: 2000,
+					icon: 'none'
+				});
+				return;
+			}
+			this.$http.post('/system/user/resetPassword', data, true).then(res => {
+				if (res.data.code == 200) {
+					uni.showToast({
+						title: '设置成功',
+						time: 2000,
+						icon: 'none'
+					});
+					this.currentPassword = '';
+					this.newPassword = '';
+					this.confirmPassword = '';
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						time: 2000,
+						icon: 'none'
+					});
+				}
+			});
+		},
 		tabOne: function(item) {
 			this.typeTab = item;
 		},
@@ -126,13 +160,13 @@ export default {
 					uni.navigateTo({
 						url: './add?shareId=' + res.data.data
 					});
-				}else{
+				} else {
 					uni.showToast({
-						title:res.data.msg,
+						title: res.data.msg,
 						icon: 'none',
 						duration: 2000,
 						position: 'center'
-					})
+					});
 				}
 			});
 		}

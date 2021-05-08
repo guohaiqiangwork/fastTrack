@@ -1,6 +1,6 @@
 <template>
 	<view class="pb-80">
-		<view class="bg-ff pt-20 ">
+		<view class="bg-ff pt-20 " v-if="fromFalg != 'three'">
 			<view :class="typeTab == item.type ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.type)" v-for="(item, index) in tabList" :key="index">
 				{{ item.title }}
 			</view>
@@ -14,27 +14,29 @@
 					<view class="flex justify-between fs-25 color-29 pt-30 ">
 						<view class="">
 							<view class="fw-600">发货人信息</view>
-							<view class="">河北兴农谷物销售有限公司</view>
+							<view class="" v-if="consignorData.name">{{ consignorData.name }}</view>
+							<view class="" v-else>暂无发货人信息</view>
 						</view>
-						<view class="r_btn" @click="addList('edit')">编辑订单信息</view>
+						<view class="r_btn" @click="addList('edit', 'cg')">编辑订单信息</view>
 					</view>
 
-					<view class=" bor_bottom pb-20">62166102000****7010</view>
+					<view class=" bor_bottom pb-20" v-if="consignorData.bankCard">{{ consignorData.bankCard }}</view>
+					<view class=" bor_bottom pb-20" v-else>无</view>
 					<view class=" fw-700">收货人信息</view>
-					<view class="mt-10">名称：石家庄市金谷粮食加工厂</view>
+					<view class="mt-10">名称：{{ consigneeData.comName }}</view>
 					<view class="flex mt-10">
-						<view class="wp-50">联系人：张三三</view>
-						<view class="">电话：13022335566</view>
+						<view class="wp-50">联系人：{{ consigneeData.leader }}</view>
+						<view class="">电话：{{ consigneeData.phone }}</view>
 					</view>
-					<view class="mt-10">地址：石家庄市桥西区红旗大街与南二环交口南行500米 金 谷粮食加工厂</view>
+					<view class="mt-10">地址：{{ consigneeData.address }}</view>
 				</view>
 			</view>
-			<view class="moudel_width mt-50">
+			<view class="moudel_width mt-60">
 				<view class="moudel_list fs-25 pb-70 ">
 					<view class="pt-20" v-for="(item, index) in productlist" :key="index">
 						<view class="flex justify-between">
 							<view class=" color-29 fw-700">
-								名称：{{ item.name }}
+								名称：{{ item.productName }}
 								<input v-if="item.type != 1" @input="getName" type="text" v-model="item.name" value="item.name" placeholder="请输入名称" />
 							</view>
 							<view class="color-98" @click="okList(index)" v-if="item.type != 1">确认</view>
@@ -42,12 +44,12 @@
 						</view>
 						<view class="flex  bor_bottom_s pb-20" style="color: #979D9F;">
 							<view class="">
-								单价：{{ item.price }}
-								<input v-if="!item.price" type="text" value="" placeholder="请输入单价" />
+								单价：{{ item.price }}（元/KG）
+								<input v-if="item.type != 1" type="text" value="" placeholder="请输入单价" />
 							</view>
 							<view class="">
-								数量：{{ item.size }}
-								<input v-if="!item.size" type="text" value="" placeholder="请输入数量" />
+								数量：{{ item.weight }}（KG）
+								<input v-if="item.type != 1" type="text" value="" placeholder="请输入数量" />
 							</view>
 						</view>
 					</view>
@@ -59,10 +61,11 @@
 				<view class="fs-25" style="line-height: 1;">添加商品</view>
 			</view>
 			<view class="moudel_width">
-				<view class="btn_bd_t">总金额：1250000.00（元）</view>
+				<view class="btn_bd_t">总金额：{{ totalPrice }}（元）</view>
 				<view class="two_btn ">
-					<view class="wp-50" style="border-right: 1px solid #A77845;">保存</view>
-					<view class="wp-50">保存并提交</view>
+					<view class="wp-50" v-if="fromFalg != 'three'" style="border-right: 1px solid #A77845;" @click="save(false)">保存</view>
+					<view class="wp-50" v-else style="border-right: 1px solid #A77845;" @click="overOrder">取消订单</view>
+					<view class="wp-50" @click="save(true)">保存并提交</view>
 				</view>
 			</view>
 		</block>
@@ -70,29 +73,29 @@
 		<block v-if="typeTab == 2">
 			<view class="">
 				<image src="../../../static/images/bjt1.png" mode="" class="image_width"></image>
-				<view class="login_moudel">
+				<view class="login_moudel" style="height: 500upx">
 					<view class="flex justify-between fs-25 color-29 pt-30 ">
 						<view class="">
 							<view class="fw-600">发货人信息</view>
-							<view class="">河北兴农谷物销售有限公司</view>
+							<view class="">{{ consigneeData.comName }}</view>
 						</view>
-						<view class="r_btn" @click="addList('edit')">编辑订单信息</view>
+						<view class="r_btn" @click="addList('edit', 'xs')">编辑订单信息</view>
 					</view>
 
-					<view class=" bor_bottom pb-20">62166102000****7010</view>
+					<view class=" bor_bottom pb-20">{{ consigneeData.bankAccount }}</view>
 					<view class=" fw-700">收货人信息</view>
-					<view class="mt-10">名称：石家庄市金谷粮食加工厂</view>
+					<view class="mt-10">名称：{{ consigneeDataX.comName }}</view>
 					<view class="flex mt-10">
-						<view class="wp-50">联系人：张三三</view>
-						<view class="">电话：13022335566</view>
+						<view class="wp-50">联系人：{{ consigneeDataX.leader }}</view>
+						<view class="">电话：{{ consigneeDataX.phone }}</view>
 					</view>
-					<view class="mt-10">地址：石家庄市桥西区红旗大街与南二环交口南行500米 金 谷粮食加工厂</view>
+					<view class="mt-10">地址：{{ consigneeDataX.address }}</view>
 				</view>
 			</view>
-			<view class="titl_m mt-20">
+			<view class="titl_m ">
 				<view class="moudel_width flex justify-between pt-20">
-					<view class="">订单号：2021122000001</view>
-					<view class="">日期：2021-12-20</view>
+					<view class="">订单号：2021122000001 假数据</view>
+					<view class="">日期：2021-12-20 假数据</view>
 				</view>
 			</view>
 			<view class="moudel_width mt-50">
@@ -100,7 +103,7 @@
 					<view class="pt-20" v-for="(item, index) in productlist" :key="index">
 						<view class="flex justify-between">
 							<view class=" color-29 fw-700">
-								名称：{{ item.name }}
+								名称：{{ item.productName }}
 								<input v-if="item.type != 1" @input="getName" type="text" v-model="item.name" value="item.name" placeholder="请输入名称" />
 							</view>
 							<view class="color-98" @click="okList(index)" v-if="item.type != 1">确认</view>
@@ -108,12 +111,12 @@
 						</view>
 						<view class="flex  bor_bottom_s pb-20" style="color: #979D9F;">
 							<view class="">
-								单价：{{ item.price }}
-								<input v-if="!item.price" type="text" value="" placeholder="请输入单价" />
+								单价：{{ item.price }}（元/KG）
+								<input v-if="item.type != 1" type="text" value="" placeholder="请输入单价" />
 							</view>
 							<view class="">
-								数量：{{ item.size }}
-								<input v-if="!item.size" type="text" value="" placeholder="请输入数量" />
+								数量：{{ item.weight }}（KG）
+								<input v-if="item.type != 1" type="text" value="" placeholder="请输入数量" />
 							</view>
 						</view>
 					</view>
@@ -125,10 +128,10 @@
 				<view class="fs-25" style="line-height: 1;">添加商品</view>
 			</view>
 			<view class="moudel_width">
-				<view class="btn_bd_t">总金额：1250000.00（元）</view>
+				<view class="btn_bd_t">总金额：{{ totalPrice }}（元）</view>
 				<view class="two_btn">
-					<view class="wp-50" style="border-right: 1px solid #A77845;">保存</view>
-					<view class="wp-50">保存并提交</view>
+					<view class="wp-50" style="border-right: 1px solid #A77845;" @click="save(false, 'xs')">保存</view>
+					<view class="wp-50" @click="save(true, 'xs')">保存并提交</view>
 				</view>
 			</view>
 		</block>
@@ -150,27 +153,147 @@ export default {
 				}
 			],
 			typeTab: 1,
-			productlist: [
-				{
-					name: '硬粟（1级）',
-					price: '4.3（元/KG）',
-					size: '4000（KG）',
-					type: 1
-				}
-			]
+			productlist: [],
+
+			consigneeData: {
+				comName: '',
+				address: '',
+				leader: '',
+				phone: ''
+			}, //收货人信息
+			consignorData: {
+				name: '',
+				bankCard: '',
+				phone: ''
+			}, //发货人信息
+			totalPrice: '', //总数
+			consigneeDataX: '',
+			fromFalg: ''
 		};
 	},
+	onLoad(option) {
+		console.log(option);
+		if (uni.getStorageSync('fromFalg')) {
+		} else {
+			// 获取收货人信息采购单     销售单发货人信息
+			this.consigneeData.comName = uni.getStorageSync('comName'); //公司名称
+			this.consigneeData.address = uni.getStorageSync('address'); //公司地址
+			this.consigneeData.phone = uni.getStorageSync('phone');
+			this.consigneeData.leader = uni.getStorageSync('leader');
+			this.consigneeData.bankAccount = uni.getStorageSync('bankAccount');
+		}
+
+		if (option) {
+			console.log(option);
+		}
+	},
+	onShow(option) {
+		console.log(option);
+		let that = this;
+		// 获取选择产品数据
+		uni.getStorage({
+			key: 'prictList_key',
+			success(res) {
+				that.productlist = res.data;
+			}
+		});
+		this.getTotal(); //计算总价
+		// 获取发货人信息 采购单
+		if (uni.getStorageSync('consignor')) {
+			this.consignorData = uni.getStorageSync('consignor');
+		}
+		// 获取收货人信息 销售单
+		if (uni.getStorageSync('consigneeDataX')) {
+			this.consigneeDataX = uni.getStorageSync('consigneeDataX');
+			console.log(this.consigneeData);
+		}
+		// 处理从订单管理页面过来的数据 采购订单
+		if (uni.getStorageSync('fromFalg')) {
+			this.fromFalg = uni.getStorageSync('fromFalg');
+			this.orderId = uni.getStorageSync('orderId');
+			this.typeTab = uni.getStorageSync('threeFalg');
+			let url = '/system/orders/' + this.orderId;
+			this.$http.get(url, '', true).then(res => {
+				console.log(res.data.data);
+				let resData = res.data.data;
+				if (res.data.code == 200) {
+					// 发货人信息
+					this.consignorData.name = resData.sellerName;
+					this.consignorData.bankCard = resData.sellerBankAccount;
+					this.consignorData.phone = resData.sellerMobile;
+					// 收货人信息
+					this.consigneeData.comName = resData.buyerName; //公司名称
+					this.consigneeData.address = resData.buyerArea; //公司地址
+					this.consigneeData.phone = resData.buyerMobile;
+					this.consigneeData.leader = resData.createBy;
+					let dataList = [];
+					if (resData.details.length > 0) {
+						for (let i = 0; i < resData.details.length; i++) {
+							// console.log(resData.details[i]);
+							let item = {
+								productId: Number(resData.details[i].productId),
+								productName: resData.details[i].productName,
+								price: resData.details[i].productPrice,
+								weight: resData.details[i].productWeight,
+								type: '1'
+							};
+							dataList.push(item);
+						}
+					}
+
+					this.productlist = dataList;
+					this.getTotal(); //计算总价
+				}
+			});
+		}
+	},
+
+	onHide() {
+		// 处理从订单管理过来的数据
+		if (uni.getStorageSync('fromFalg')) {
+			uni.setStorageSync('fromFalg', '');
+			this.productlist = [];
+		}
+	},
 	methods: {
+		// 计算总价采购单
+		getTotal: function() {
+			let that = this;
+			let priceList = [];
+			if (that.productlist.length > 0) {
+				for (let i = 0; i < that.productlist.length; i++) {
+					console.log(that.productlist[i]);
+					priceList.push(Number(that.productlist[i].price) * Number(that.productlist[i].weight));
+					this.totalPrice = eval(priceList.join('+')).toFixed(2); //总计
+				}
+			}
+		},
 		tabOne: function(item) {
 			this.typeTab = item;
 		},
+
+		// 删除商品
 		delList: function(item) {
-			this.productlist.splice(item);
-		},
-		addList: function(item) {
-			uni.navigateTo({
-				url: './' + item
+			let that = this;
+			that.productlist.splice(item, 1);
+			this.getTotal();
+			uni.setStorage({
+				key: 'prictList_key',
+				data: that.productlist,
+				success: function() {}
 			});
+		},
+		//添加商品
+		addList: function(item, type) {
+			if (type) {
+				uni.navigateTo({
+					url: './' + item + '?type=' + type
+				});
+			} else {
+				uni.navigateTo({
+					url: './' + item
+				});
+			}
 		},
 		getName: function(e, index) {
 			console.log(e.detail.value);
@@ -186,6 +309,93 @@ export default {
 			}
 			this.productlist[item].type = 1;
 			this.$set(this.productlist);
+		},
+
+		// 加工商采购单保存
+		save: function(type, urlfalg) {
+			var urlData = '';
+			var data = '';
+
+			if (urlfalg == 'xs') {
+				urlData = '/system/orders/sold';
+				data = {
+					orderId: '',
+					shipperId: uni.getStorageSync('comId'),
+					confirmed: type,
+					senderName: this.consigneeData.comName,
+					senderBankAccount: this.consigneeData.bankAccount,
+					senderPhone: this.consigneeData.phone,
+					receiverName: this.consigneeDataX.leader,
+					receiverPhone: this.consigneeDataX.phone,
+					receiverAddress: this.consigneeDataX.address,
+					products: this.productlist
+				};
+			} else {
+				urlData = '/system/orders/procure';
+				data = {
+					orderId: '',
+					shipperId: uni.getStorageSync('comId'),
+					confirmed: type,
+					senderName: this.consignorData.name,
+					senderBankAccount: this.consignorData.bankCard,
+					senderPhone: this.consignorData.phone,
+					receiverName: this.consigneeData.comName,
+					receiverPhone: this.consigneeData.phone,
+					receiverAddress: this.consigneeData.address,
+					products: this.productlist
+				};
+				if (!data.senderName || !data.senderBankAccount) {
+					uni.showToast({
+						title: '发货人信息不能为空',
+						time: 2000,
+						icon: 'none'
+					});
+					return;
+				}
+			}
+			console.log(urlData);
+			this.$http.post(urlData, data, true).then(res => {
+				if (res.data.code == 200) {
+					if (urlfalg == 'xs') {
+						console.log(res);
+						this.consigneeDataX = '';
+					} else {
+						uni.setStorageSync('threeFalg', 'cg'); //身份标识
+						uni.setStorageSync('threeFalgType', '0'); //身份标识
+						this.consignorData = '';
+						uni.setStorageSync('consignor', ''); //清空发货人信息
+					}
+					this.productlist = [];
+					uni.setStorage({
+						key: 'prictList_key',
+						data: this.productlist,
+						success: function() {
+							uni.switchTab({
+								url: '../three/three'
+							});
+						}
+					});
+				} else {
+					uni.showToast({
+						title: res.data.msg,
+						time: 2000,
+						icon: 'none'
+					});
+				}
+			});
+		},
+
+		// 采购单取消
+		overOrder: function() {
+			let url = '/system/orders/' + this.orderId + '/cancel';
+			this.$http.post(url, '', true).then(res => {
+				if (res.data.code == 200) {
+					uni.setStorageSync('fromFalg', '');
+					uni.switchTab({
+						url: '../one/one'
+					});
+				}
+			});
 		}
 	}
 };

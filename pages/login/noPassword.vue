@@ -113,11 +113,12 @@ export default {
 				return false;
 			}
 			that.disabled = true; //禁用点击
-			var phoneData = {
-				phone: that.userPhone
-			};
+			// var phoneData = {
+			// 	phone: that.userPhone
+			// };
+			let url = '/sms/reset/' + this.phone;
 			that.$http
-				.get('/api/common/mb/sendCode', phoneData, false)
+				.get(url,'', false)
 				.then(res => {
 					if (res.data.code == 200) {
 						that.countdown = 60;
