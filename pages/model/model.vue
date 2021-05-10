@@ -23,7 +23,6 @@
 			<view class="btn_bd mt-60" @click="okButtom">确认</view>
 		</view>
 		<!-- 订单页添加商品 -->
-
 		<block v-if="model == 'two'">
 			<view class="listName" style="background-color: #CAB88F;">{{ listName }}</view>
 			<view class="moudel_list  pb-40">
@@ -39,6 +38,11 @@
 				<view class="btn_bd mt-60" @click="okButtom">确认</view>
 			</view>
 		</block>
+
+		<view class="moudel_list pb-70" v-if="model == 'order'">
+			<view style="margin-left: 10%;" class="wp-80 pt-50 "><input class="input_m pl-20" v-model="reason" maxlength="199" type="text" value="" placeholder="请输入取消订单原因" /></view>
+			<view class="btn_bd mt-60" style="background-color: #A77845;" @click="okButtom">确认</view>
+		</view>
 	</view>
 </template>
 
@@ -52,7 +56,8 @@ export default {
 			number: '', //重量
 			prictAll: '',
 			productName: '',
-			productPrice: ''
+			productPrice: '',
+			reason: ''
 		};
 	},
 	onLoad(option) {
@@ -144,6 +149,11 @@ export default {
 						});
 					}
 				});
+			} else if (this.model == 'order') {
+				uni.setStorageSync('reason',this.reason)
+				uni.navigateBack({
+					
+				})
 			}
 		}
 	}

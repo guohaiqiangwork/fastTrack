@@ -1,5 +1,21 @@
 <template>
 	<view class="pb-80">
+		<!-- 不同意弹窗 -->
+		<!-- 	<view class="" v-if="modelClose">
+			<view class="model_b">
+				<view class="model_b_m">
+					<view class="text-center fs-40 pt-30">请输入原因</view>
+					<view class=" wp-80 mt-30" style="margin-left: 10%;">
+						<input style="border: 1px solid #999999;height: 80upx;" type="text" value="" placeholder="请输入不同意的原因" />
+					</view>
+					<view class="two_btn_m mt-30">
+						<view class=" btn" style="border-right: 1px solid #a77845;" @click="closeModel">确认</view>
+						<view class="btn" style="color: #999999;">取消</view>
+					</view>
+				</view>
+			</view>
+		</view> -->
+
 		<!-- 采购单 -->
 		<block v-if="title == '采购单'">
 			<view class="">
@@ -162,7 +178,7 @@
 						<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
 						<view class="wp-50" @click="okOrder('true')">同意</view>
 					</view>
-					<view class="two_btn justify-center" @click="sendgoods"  v-else>{{ model == 4 ? '发货' : '点击收货' }}</view>
+					<view class="two_btn justify-center" @click="sendgoods" v-else>{{ model == 4 ? '发货' : '点击收货' }}</view>
 				</block>
 				<block v-else>
 					<view class="moudel_list mt-40 pt-20">
@@ -192,13 +208,17 @@ export default {
 			orderId: '', //订单id
 			orderDetail: {
 				createTime: '2021-04-26'
-			}
+			},
+			userType: '',
+			modelClose: true, //供应商不同意弹窗
+			reason: ''
 		};
 	},
 	onLoad(option) {
 		console.log(option);
 		this.model = option.type;
 		this.title = option.title;
+		this.userType = uni.getStorageSync('comType');
 		if (option.listName) {
 			this.listName = option.listName;
 		}
@@ -212,6 +232,10 @@ export default {
 	},
 	onShow() {
 		this.orderId ? this.getOrderDetail() : '';
+
+		if(uni.getStorageSync('reason')){
+			this.reason = uni.getStorageSync('reason')
+		}
 	},
 
 	methods: {
@@ -225,39 +249,75 @@ export default {
 			});
 		},
 		// 加工商发货
-		sendgoods:function(){
+		sendgoods: function() {
 			let data = {
-				 "orderId": this.orderId,
-				 "confirm": "true",
-				 "comment": "",
-			}
-			this.$http.post('/system/orders/confirm/sendgoods',data,true).then(res=>{
+				orderId: this.orderId,
+				confirm: 'true',
+				comment: ''
+			};
+			this.$http.post('/system/orders/confirm/sendgoods', data, true).then(res => {
 				if (res.data.code == 200) {
 					uni.navigateBack({});
-				}else{
+				} else {
 					uni.showToast({
 						title: res.data.msg,
 						time: 2000,
 						icon: 'none'
 					});
 				}
-			})
+			});
 		},
 		//加工商同意收货
 		okOrder: function(item) {
+			if (this.userType == 'fabricators') {
+				let data = {
+					orderId: this.orderId,
+					confirm: item
+				};
+				this.$http.post('/system/orders/self/confirm', data, true).then(res => {
+					console.log(res);
+					if (res.data.code == 200) {
+						uni.navigateBack({});
+					}
+				});
+			} else if (this.userType == 'supplier') {
+				if (item == 'false') {
+					if(this.reason){
+						this.closeModel()
+					}else{
+						uni.navigateTo({
+							url: '../../model/model?title=提示' + '&type=order'
+						});
+					}
+					
+				} else {
+					let data = {
+						orderId: this.orderId,
+						confirm: item
+					};
+					this.$http.post('/system/orders/provider/confirm', data, true).then(res => {
+						console.log(res);
+						if (res.data.code == 200) {
+							uni.navigateBack({});
+						}
+					});
+				}
+			}
+		},
+		//取消订单
+		closeModel: function() {
 			let data = {
 				orderId: this.orderId,
-				// "comment": "abc",备注
-				confirm: item
+				reason: this.reason
 			};
-			this.$http.post('/system/orders/self/confirm', data, true).then(res => {
-				console.log(res);
+
+			this.$http.post('/system/orders/cancel', data, true).then(res => {
 				if (res.data.code == 200) {
+					uni.setStorageSync('reason','')
 					uni.navigateBack({});
 				}
 			});
 		},
-		//
 
 		tabOne: function(item) {
 			this.typeTab = item;
@@ -347,5 +407,41 @@ export default {
 	height: 80upx;
 	line-height: 80upx;
 	align-items: center;
+}
+.model_b {
+	background-color: #000000a6;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+	.model_b_m {
+		width: 80%;
+		background-color: #ffffff;
+		z-index: 9999;
+		margin-left: 10%;
+		margin-top: 20%;
+		border-radius: 20upx;
+		padding-bottom: 30upx;
+	}
+	.two_btn_m {
+		display: flex;
+		height: 80upx;
+		border-radius: 50upx;
+		background-color: #ffffff;
+		border: 1px solid #a77845;
+		margin-top: 80upx;
+		color: #a77845;
+		font-size: 32upx;
+		text-align: center;
+		align-items: center;
+		font-weight: 700;
+		width: 80%;
+		margin-left: 10%;
+	}
+	.btn {
+		width: 50%;
+		line-height: 80upx;
+		text-align: center;
+	}
 }
 </style>

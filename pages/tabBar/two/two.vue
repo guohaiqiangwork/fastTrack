@@ -1,5 +1,5 @@
 <template>
-	<view class="pb-80">
+	<view class="pb-80" v-if="userType == 'fabricators'">
 		<view class="bg-ff pt-20 " v-if="fromFalg != 'three'">
 			<view :class="typeTab == item.type ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.type)" v-for="(item, index) in tabList" :key="index">
 				{{ item.title }}
@@ -137,6 +137,10 @@
 			</view>
 		</block>
 	</view>
+	
+	<view class="text-center" style="margin-top: 30%;" v-else>
+		暂无权限,请登录加工商账号
+	</view>
 </template>
 
 <script>
@@ -173,7 +177,8 @@ export default {
 			urlfalg: '',
 			orderDetail: {
 				createTime: '2021-04-26'
-			}
+			},
+			userType:''
 		};
 	},
 	onLoad(option) {
@@ -189,6 +194,8 @@ export default {
 	},
 	onShow(option) {
 		let that = this;
+		this.userType = uni.getStorageSync('comType');
+		
 		// 获取选择产品数据
 		uni.getStorage({
 			key: 'prictList_key',

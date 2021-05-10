@@ -33,9 +33,12 @@
 					</view>
 				</view>
 			</view>
-			<view class="mt-40 flex">
+			<view class="mt-40 flex"  v-if="this.userType == 'fabricators'">
 				<view @click="tabSwich('s')" :class="active == 's' ? 'color-ff bg-ca' : 'color-a7 bg-ff'" class="wp-42 f-25  left_btn ml-40">销售统计</view>
 				<view @click="tabSwich('b')" :class="active == 'b' ? 'color-ff bg-ca' : 'color-a7 bg-ff'" class="wp-42 f-25  left_btn ml-40">采购统计</view>
+			</view>
+			<view class="mt-40"  v-else style="margin-left: 30%;">
+				<view @click="tabSwich('b')"  :class="active == 'b' ? 'color-ff bg-ca' : 'color-a7 bg-ff'" class="wp-42 f-25  left_btn ml-40">采购统计</view>
 			</view>
 
 			<view class="mt-30 bg-ff">
@@ -98,29 +101,20 @@
 				</view>
 
 				<view class="mt-10 pl-20" style="background-color: #F9F6EE;">
-					<view class="fs-21" style="line-height: 1.2;" v-if="active == 's'">{{endDate}} 销售商品（种类）</view>
-					<view class="fs-21" style="line-height: 1.2;" v-else>{{endDate}} 采购商品（种类）</view>
+					<view class="fs-21" style="line-height: 1.2;" v-if="active == 's'">{{ endDate }} 销售商品（种类）</view>
+					<view class="fs-21" style="line-height: 1.2;" v-else>{{ endDate }} 采购商品（种类）</view>
 					<view class="flex justify-between mt-10 pb-10" style="border-bottom: 1px dashed #293539;">
-						<view class="fs-32 color-29 ">{{totalBottom}}</view>
+						<view class="fs-32 color-29 ">{{ totalBottom }}</view>
 						<view class="fs-25 color-a7 mr-20" @click="goUrlD()">点击查看详情</view>
 					</view>
-					<view v-for="(item,index) in bottomList" :key="index"
-					class="fs-21 mt-20 pb-10" style="color: #979D9F;border-bottom: 1px dashed #293539;">
-						<view class="wp-40">
-							名称：
-						</view>
+					<view v-for="(item, index) in bottomList" :key="index" class="fs-21 mt-20 pb-10" style="color: #979D9F;border-bottom: 1px dashed #293539;">
+						<view class="wp-40">名称：</view>
 						<view class="flex">
-							<view class="wp-40">
-								单价：{{item.productPrice}}（元/KG）
-							</view>
-							<view class="wp-40">
-								数量：{{item.productWeight}}（KG）
-							</view>
+							<view class="wp-40">单价：{{ item.productPrice }}（元/KG）</view>
+							<view class="wp-40">数量：{{ item.productWeight }}（KG）</view>
 						</view>
-						
-						<view class="fs-25 fw-700" style="color: #293539">
-							订单金额（元）：{{item.amount}}
-						</view>
+
+						<view class="fs-25 fw-700" style="color: #293539">订单金额（元）：{{ item.amount }}</view>
 					</view>
 				</view>
 			</view>
@@ -179,12 +173,18 @@ export default {
 				format: true
 			}),
 
-			dataList: [] ,//商品占比数据
-			totalBottom:0,
-			bottomList:[]
+			dataList: [], //商品占比数据
+			totalBottom: 0,
+			bottomList: [],
+			userType: ''
 		};
 	},
 	onShow() {
+		// supplier
+		this.userType = uni.getStorageSync('comType');
+		if(this.userType != 'fabricators'){
+			this.active = 'b'
+		}
 		this.getMoney(); //获取金额
 		this.getEacherData(); //获取产品数据图表
 		this.getBottomList(); //获取列表数据
@@ -266,18 +266,18 @@ export default {
 			};
 			this.$http.post('/report/detail', data, true).then(res => {
 				console.log(res);
-				if(res.data.code == 200){
-					let resData = res.data.data
+				if (res.data.code == 200) {
+					let resData = res.data.data;
 					let priceList = [];
 					this.totalBottom = 0;
-					if(resData.length > 0){
+					if (resData.length > 0) {
 						for (let i = 0; i < resData.length; i++) {
 							priceList.push(Number(resData[i].amount));
 						}
 						this.totalBottom = eval(priceList.join('+')).toFixed(2);
 					}
-					
-					this.bottomList = resData
+
+					this.bottomList = resData;
 				}
 			});
 		},

@@ -1,10 +1,15 @@
 <template>
 	<view class="pb-80">
-		<view class="bg-ff pt-20 ">
+		<!-- 加工商 -->
+		<view class="bg-ff pt-20" v-if="this.userType == 'fabricators'">
 			<view :class="typeTab == item.type ? 'border_bottom' : ' '" class="tab_item" @click="tabOne(item.type)" v-for="(item, index) in tabList" :key="index">
 				{{ item.title }}
 			</view>
 		</view>
+		<!-- 供应商 -->
+		
+		<!-- 经销商 -->
+		
 
 		<block v-if="typeTab == 1">
 			<view class="moudel_width">
@@ -92,10 +97,17 @@ export default {
 			leader: '',
 			currentPassword: '',
 			newPassword: '',
-			confirmPassword: ''
+			confirmPassword: '',
+			userType: ''
 		};
 	},
-	onLoad() {},
+	onLoad() {
+		this.userType = uni.getStorageSync('comType');
+		
+		if(this.userType != 'fabricators'){
+			this.typeTab = 2
+		}
+	},
 	methods: {
 		okEdit: function() {
 			let data = {
