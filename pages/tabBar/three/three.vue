@@ -48,7 +48,13 @@
 							<view class=" ">{{ item.buyerMobile }}</view>
 							<view class="flex justify-between">
 								<view class=""></view>
-								<view class="color-a7" @click="goUrl(item)" v-if="typeTwo != 'waiting_provider_confirm' && typeTwo != 'waiting_send_goods' && typeTwo != 'received_goods' && typeTwo != 'paid_money'">点击查看</view>
+								<view
+									class="color-a7"
+									@click="goUrl(item)"
+									v-if="typeTwo != 'waiting_provider_confirm' && typeTwo != 'waiting_send_goods' && typeTwo != 'received_goods' && typeTwo != 'paid_money'"
+								>
+									点击查看
+								</view>
 							</view>
 						</view>
 					</view>
@@ -68,7 +74,14 @@
 							<!-- <view class=" ">商品：硬粟米（1级）</view> -->
 							<view class="flex justify-between">
 								<view class=""></view>
-								<view class="color-a7" @click="goUrl" v-if="typeTwo == 1 || typeTwo == 4 || typeTwo == 8 || typeTwo == 3">点击查看</view>
+
+								<view
+									class="color-a7"
+									@click="goUrl(item)"
+									v-if="typeTwo == 'new'  || typeTwo == 'cancelled' || typeTwo == 'waiting_self_confirm' || typeTwo == 'waiting_send_goods'"
+								>
+									点击查看
+								</view>
 							</view>
 						</view>
 					</view>
@@ -77,20 +90,24 @@
 
 				<!-- 发货单 -->
 				<block v-if="typeTab == 's1'">
-					<view class=" mt-30" v-for="(item, index) in [1, 2, 3]" :key="index">
+					<view class=" mt-30" v-for="(item, index) in orderList" :key="index">
 						<view style="background-color: #FBC941;" class="flex justify-between fs-25 color-ff pt-20 pb-20 pl-20 pr-20">
-							<view class="">订单号：2021122000001</view>
-							<view class="">日期：2021-12-20</view>
+							<view class="">订单号：{{ item.id }}</view>
+							<view class="">日期：{{ item.createTime.substring(5) }}</view>
 						</view>
 						<view class="moudel_list pb-20  pt-20 fs-25 color-29" style="border-radius: 0;">
-							<view class="fs-32 color-a7 fw-700 ">河北兴农谷物销售有限公司</view>
-							<view class=" ">商品：硬粟米（1级）</view>
+							<view class="fs-32 color-a7 fw-700 ">{{ item.buyerName }}</view>
+							<view class=" ">{{ item.buyerMobile }}</view>
+							<!-- <view class=" ">商品：硬粟米（1级）</view> -->
 							<view class="flex justify-between">
-								<view class="">订单状态：未提交</view>
-								<view class="color-a7" @click="goUrl" v-if="typeTwo == 2 || typeTwo == 3">点击查看</view>
+								<view class=""></view>
+						<view class="color-a7" @click="goUrl(item)" v-if="typeTwo == 'waiting_self_confirm' || typeTwo == 'received_goods'">点击查看</view>
 							</view>
 						</view>
+						
+						
 					</view>
+					<view class="fs-32 color-33 mt-50 text-center" v-if="orderList.length == 0">暂无数据</view>
 				</block>
 			</scroll-view>
 		</view>
@@ -142,6 +159,7 @@ export default {
 			date: getDate({
 				format: true
 			}),
+
 			twoList: [
 				{
 					title: '未提交',
@@ -242,7 +260,7 @@ export default {
 					},
 					{
 						title: '待付款',
-						type: 3
+						type: 'received_goods'
 					},
 					{
 						title: '已付款',
@@ -314,17 +332,17 @@ export default {
 							break;
 						case 'waiting_self_confirm':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=1' + '&orderId='+ dataItem.id
+								url: './order?title=采购单' + '&type=1' + '&orderId=' + dataItem.id
 							});
 							break;
 						case 'sent_goods':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=5'+ '&orderId='+ dataItem.id
+								url: './order?title=采购单' + '&type=5' + '&orderId=' + dataItem.id
 							});
 							break;
 						case 'cancelled':
 							uni.navigateTo({
-								url: './order?title=采购单' + '&type=8'+ '&orderId='+ dataItem.id
+								url: './order?title=采购单' + '&type=8' + '&orderId=' + dataItem.id
 							});
 							break;
 					}
@@ -332,23 +350,30 @@ export default {
 				case 's':
 					switch (this.typeTwo) {
 						case 'new':
-							uni.navigateTo({
-								url: './order?title=销售单' + '&type=5'
+							uni.setStorageSync('orderId', item.id);
+							uni.setStorageSync('threeFalg', 2);
+							uni.setStorageSync('fromFalg', 'three');
+							uni.switchTab({
+								url: '../two/two'
 							});
 							break;
+							// uni.navigateTo({
+							// 	url: './order?title=销售单' + '&type=5' +   '&orderId='+ dataItem.id
+							// });
+							// break;
 						case 'waiting_self_confirm':
 							uni.navigateTo({
-								url: './order?title=销售单' + '&type=5'
+								url: './order?title=销售单' + '&type=5' + '&orderId='+ dataItem.id
 							});
 							break;
 						case 'waiting_send_goods':
 							uni.navigateTo({
-								url: './order?title=销售单' + '&type=4'
+								url: './order?title=销售单' + '&type=4' + '&orderId='+ dataItem.id
 							});
 							break;
 						case 'cancelled':
 							uni.navigateTo({
-								url: './order?title=销售单' + '&type=8'
+								url: './order?title=销售单' + '&type=8'+ '&orderId='+ dataItem.id
 							});
 							break;
 					}
@@ -358,12 +383,12 @@ export default {
 					switch (this.typeTwo) {
 						case 'waiting_self_confirm':
 							uni.navigateTo({
-								url: './issue?title=发货单' + '&type=2'
+								url: './issue?title=发货单' + '&type=2'+ '&orderId='+ dataItem.id
 							});
 							break;
-						case 3:
+						case 'received_goods':
 							uni.navigateTo({
-								url: './issue?title=发货单' + '&type=3'
+								url: './issue?title=发货单' + '&type=3' +  '&orderId='+ dataItem.id
 							});
 							break;
 					}

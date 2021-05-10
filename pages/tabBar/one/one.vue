@@ -261,8 +261,8 @@ export default {
 		getBottomList: function() {
 			let data = {
 				orderType: this.active,
-				// date: this.endDateOne
-				date:'2021-4-24'
+				date: this.endDateOne
+				// date:'2021-4-24'
 			};
 			this.$http.post('/report/detail', data, true).then(res => {
 				console.log(res);

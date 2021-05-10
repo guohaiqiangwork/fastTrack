@@ -157,6 +157,7 @@ export default {
 			console.log(this.consignorData)
 			// 获取收货人信息
 			if (uni.getStorageSync('consigneeDataX')) {
+				console.log('销售单获取收货人信息' + JSON.stringify(uni.getStorageSync('consigneeDataX')) )
 				this.consigneeData = uni.getStorageSync('consigneeDataX');
 			}
 		}

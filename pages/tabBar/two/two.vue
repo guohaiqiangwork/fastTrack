@@ -93,9 +93,9 @@
 				</view>
 			</view>
 			<view class="titl_m ">
-				<view class="moudel_width flex justify-between pt-20">
-					<view class="">订单号：2021122000001 假数据</view>
-					<view class="">日期：2021-12-20 假数据</view>
+				<view class="moudel_width flex justify-between pt-20" v-if="orderDetail.id">
+					<view class="">订单号：{{ orderDetail.id }}</view>
+					<view class="">日期：{{ orderDetail.createTime.substring(0, 10) }}</view>
 				</view>
 			</view>
 			<view class="moudel_width mt-50">
@@ -130,7 +130,8 @@
 			<view class="moudel_width">
 				<view class="btn_bd_t">总金额：{{ totalPrice }}（元）</view>
 				<view class="two_btn">
-					<view class="wp-50" style="border-right: 1px solid #A77845;" @click="save(false, 'xs')">保存</view>
+					<view class="wp-50" v-if="fromFalg != 'three'" style="border-right: 1px solid #A77845;" @click="save(false, 'xs')">保存</view>
+					<view class="wp-50" v-else style="border-right: 1px solid #A77845;" @click="overOrder">取消订单</view>
 					<view class="wp-50" @click="save(true, 'xs')">保存并提交</view>
 				</view>
 			</view>
@@ -168,11 +169,14 @@ export default {
 			}, //发货人信息
 			totalPrice: '', //总数
 			consigneeDataX: '',
-			fromFalg: ''
+			fromFalg: '',
+			urlfalg: '',
+			orderDetail: {
+				createTime: '2021-04-26'
+			}
 		};
 	},
 	onLoad(option) {
-		console.log(option);
 		if (uni.getStorageSync('fromFalg')) {
 		} else {
 			// 获取收货人信息采购单     销售单发货人信息
@@ -184,7 +188,6 @@ export default {
 		}
 	},
 	onShow(option) {
-		console.log(option);
 		let that = this;
 		// 获取选择产品数据
 		uni.getStorage({
@@ -201,45 +204,103 @@ export default {
 		// 获取收货人信息 销售单
 		if (uni.getStorageSync('consigneeDataX')) {
 			this.consigneeDataX = uni.getStorageSync('consigneeDataX');
-			console.log(this.consigneeData);
+			console.log(this.consigneeDataX);
 		}
 		// 处理从订单管理页面过来的数据 采购订单
 		if (uni.getStorageSync('fromFalg')) {
-			this.fromFalg = uni.getStorageSync('fromFalg');
-			this.orderId = uni.getStorageSync('orderId');
-			this.typeTab = uni.getStorageSync('threeFalg');
-			let url = '/system/orders/' + this.orderId;
-			this.$http.get(url, '', true).then(res => {
-				console.log(res.data.data);
-				let resData = res.data.data;
-				if (res.data.code == 200) {
-					// 发货人信息
-					this.consignorData.name = resData.sellerName;
-					this.consignorData.bankCard = resData.sellerBankAccount;
-					this.consignorData.phone = resData.sellerMobile;
-					// 收货人信息
-					this.consigneeData.comName = resData.buyerName; //公司名称
-					this.consigneeData.address = resData.buyerArea; //公司地址
-					this.consigneeData.phone = resData.buyerMobile;
-					this.consigneeData.leader = resData.createBy;
-					let dataList = [];
-					if (resData.details.length > 0) {
-						for (let i = 0; i < resData.details.length; i++) {
-							let item = {
-								productId: Number(resData.details[i].productId),
-								productName: resData.details[i].productName,
-								price: resData.details[i].productPrice,
-								weight: resData.details[i].productWeight,
-								type: '1'
-							};
-							dataList.push(item);
+			//采购单数据
+			if (uni.getStorageSync('threeFalg') == 1) {
+				this.fromFalg = uni.getStorageSync('fromFalg');
+				this.orderId = uni.getStorageSync('orderId');
+				this.typeTab = uni.getStorageSync('threeFalg');
+				let url = '/system/orders/' + this.orderId;
+				this.$http.get(url, '', true).then(res => {
+					console.log(res.data.data);
+					let resData = res.data.data;
+					if (res.data.code == 200) {
+						// 发货人信息
+						this.consignorData.name = resData.sellerName;
+						this.consignorData.bankCard = resData.sellerBankAccount;
+						this.consignorData.phone = resData.sellerMobile;
+						// 收货人信息
+						this.consigneeData.comName = resData.buyerName; //公司名称
+						this.consigneeData.address = resData.buyerArea; //公司地址
+						this.consigneeData.phone = resData.buyerMobile;
+						this.consigneeData.leader = resData.createBy;
+						let dataList = [];
+						if (resData.details.length > 0) {
+							for (let i = 0; i < resData.details.length; i++) {
+								let item = {
+									productId: Number(resData.details[i].productId),
+									productName: resData.details[i].productName,
+									price: resData.details[i].productPrice,
+									weight: resData.details[i].productWeight,
+									type: '1'
+								};
+								dataList.push(item);
+							}
 						}
-					}
 
-					this.productlist = dataList;
-					this.getTotal(); //计算总价
-				}
-			});
+						this.productlist = dataList;
+						this.getTotal(); //计算总价
+					}
+				});
+			} else if (uni.getStorageSync('threeFalg') == 2) {
+				console.log('销售单');
+				let that = this;
+				this.fromFalg = uni.getStorageSync('fromFalg');
+				this.orderId = uni.getStorageSync('orderId');
+				this.typeTab = uni.getStorageSync('threeFalg');
+				let url = '/system/orders/' + this.orderId;
+				this.$http.get(url, '', true).then(res => {
+					console.log(res.data.data);
+					let resData = res.data.data;
+					that.orderDetail = resData;
+					if (res.data.code == 200) {
+						console.log('6786')
+						// 货人信息
+						that.consigneeData.name = resData.sellerName;
+						that.consigneeData.bankCard = resData.sellerBankAccount;
+						that.consigneeData.phone = resData.sellerMobile;
+						// 发货人信息
+
+						// this.consigneeDataX = uni.getStorageSync('consigneeDataX');
+						that.consignorData = {
+							comName: '',
+							address: '',
+							phone: '',
+							leader: ''
+						};
+						
+						that.consigneeDataX.comName = resData.buyerName; //公司名称
+						that.consigneeDataX.address = resData.buyerArea; //公司地址
+						that.consigneeDataX.phone = resData.buyerMobile;
+						that.consigneeDataX.leader = resData.createBy;
+						// 忘了那个是赋值的的了
+						that.consignorData.comName = resData.buyerName; //公司名称
+						that.consignorData.address = resData.buyerArea; //公司地址
+						that.consignorData.phone = resData.buyerMobile;
+						that.consignorData.leader = resData.createBy;
+						uni.setStorageSync('consigneeDataX',that.consignorData)
+						let dataList = [];
+						if (resData.details.length > 0) {
+							for (let i = 0; i < resData.details.length; i++) {
+								let item = {
+									productId: Number(resData.details[i].productId),
+									productName: resData.details[i].productName,
+									price: resData.details[i].productPrice,
+									weight: resData.details[i].productWeight,
+									type: '1'
+								};
+								dataList.push(item);
+							}
+						}
+
+						this.productlist = dataList;
+						this.getTotal(); //计算总价
+					}
+				});
+			}
 		}
 	},
 
@@ -248,9 +309,14 @@ export default {
 		if (uni.getStorageSync('fromFalg')) {
 			uni.setStorageSync('fromFalg', '');
 			this.productlist = [];
-			this.consignorData=''
-			this.totalPrice =0
-			this.fromFalg = ''
+			this.totalPrice = 0;
+			this.fromFalg = '';
+			if (this.typeTab == 1) {
+				this.consignorData = '';
+			} else {
+				this.consigneeDataX = '';
+				this.orderDetail = '';
+			}
 		}
 	},
 	methods: {
@@ -313,8 +379,8 @@ export default {
 		save: function(type, urlfalg) {
 			var urlData = '';
 			var data = '';
-
-			if (urlfalg == 'xs') {
+			if (this.typeTab == 2) {
+				//销售
 				urlData = '/system/orders/sold';
 				data = {
 					orderId: '',
@@ -329,6 +395,7 @@ export default {
 					products: this.productlist
 				};
 			} else {
+				console.log('采购低昂单');
 				urlData = '/system/orders/procure';
 				data = {
 					orderId: '',
@@ -351,15 +418,15 @@ export default {
 					return;
 				}
 			}
-			console.log(urlData);
 			this.$http.post(urlData, data, true).then(res => {
 				if (res.data.code == 200) {
-					if (urlfalg == 'xs') {
+					//销售
+					if (this.typeTab == 2) {
 						console.log(res);
 						this.consigneeDataX = '';
 					} else {
-						uni.setStorageSync('threeFalg', 'cg'); //身份标识
-						uni.setStorageSync('threeFalgType', '0'); //身份标识
+						// uni.setStorageSync('threeFalg', 'cg'); //身份标识
+						// uni.setStorageSync('threeFalgType', '0'); //身份标识
 						this.consignorData = '';
 						uni.setStorageSync('consignor', ''); //清空发货人信息
 					}
@@ -383,7 +450,7 @@ export default {
 			});
 		},
 
-		// 采购单取消
+		//订单取消
 		overOrder: function() {
 			let url = '/system/orders/' + this.orderId + '/cancel';
 			this.$http.post(url, '', true).then(res => {
