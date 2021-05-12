@@ -3,26 +3,24 @@
 		<view class="moudel_list mt-30">
 			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">联系人</view>
-			
-				<view class="ml-30 fs-30">
-					<input type="number" maxlength="11" @input="keyPhone" placeholder="请输入联系人" placeholder-style="color:#cccccc" />
-				</view>
+
+				<view class="ml-30 fs-30"><input type="text"  placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
 			</view>
 			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">手机号</view>
 
 				<view class="ml-30 fs-30" v-if="falgInput == 'login'">
-					<input type="number" maxlength="11" @input="keyPhone" placeholder="请输入手机号码" placeholder-style="color:#cccccc" />
+					<input type="number" maxlength="11" v-model="phone" placeholder="请输入手机号码" placeholder-style="color:#cccccc" />
 				</view>
 				<view class="ml-30 fs-30 " v-else>{{ userPhone }}</view>
 			</view>
 			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">验证码</view>
 				<view class="flex wp-90">
-					<view class="font_size28   " style="margin-left: 5.3%;width: 67%;">
-						<input type="number" maxlength="6" @input="keyCode" placeholder="请输入验证码" placeholder-style="color:#cccccc" />
+					<view class="font_size28" style="margin-left: 5.3%;width: 67%;">
+						<input type="number" v-model="valCode" maxlength="6"  placeholder="请输入验证码" placeholder-style="color:#cccccc" />
 					</view>
-					<view class="wp_33 text-center fs-30 color-f5"  @click="yzm_function">
+					<view class="wp_33 text-center fs-30 color-f5" @click="yzm_function">
 						{{ countdown }}
 						<text v-show="timestatus" class="forgetpwd2">秒重获</text>
 					</view>
@@ -30,11 +28,11 @@
 			</view>
 			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">新密码</view>
-				<view class="ml-30 fs-30 "><input type="password" @input="keyPassword" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 "><input type="password" v-model="newPassword" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
 			</view>
 			<view class="flex  padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">确认密码</view>
-				<view class="ml-30 fs-30 "><input type="password" @input="keyPassword1" placeholder="请再次输入密码" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 "><input type="password" v-model="confirmPassword" placeholder="请再次输入密码" placeholder-style="color:#cccccc" /></view>
 			</view>
 		</view>
 
@@ -50,7 +48,13 @@ export default {
 			timestatus: false,
 			password: '',
 			password1: '',
-			userPhone: ''
+			userPhone: '',
+			
+			
+			phone: '', //手机号
+			newPassword: '', // 新密码
+			confirmPassword: '', // 确认密码
+			valCode: ' '
 		};
 	},
 	mounted() {
@@ -95,7 +99,7 @@ export default {
 		// 获取验证码
 		yzm_function: function() {
 			var that = this;
-			if (!/^1[3456789]\d{9}$/.test(this.userPhone)) {
+			if (!/^1[3456789]\d{9}$/.test(this.phone)) {
 				uni.showToast({
 					title: '请输入正确的11位手机号码',
 					icon: 'none',
@@ -118,7 +122,7 @@ export default {
 			// };
 			let url = '/sms/reset/' + this.phone;
 			that.$http
-				.get(url,'', false)
+				.get(url, '', false)
 				.then(res => {
 					if (res.data.code == 200) {
 						that.countdown = 60;
@@ -153,7 +157,7 @@ export default {
 		},
 
 		funBindMobileAndIdCard: function() {
-			if (!this.phoneCode || this.phoneCode.length < 6) {
+			if (!this.valCode || this.valCode.length < 6) {
 				uni.showToast({
 					title: '请检查验证码',
 					icon: 'none',
@@ -161,7 +165,7 @@ export default {
 					position: 'center'
 				});
 				return;
-			} else if (!this.userPhone) {
+			} else if (!this.phone) {
 				uni.showToast({
 					title: '请填写手机号',
 					icon: 'none',
@@ -169,7 +173,7 @@ export default {
 					position: 'center'
 				});
 				return;
-			} else if (!this.password || !this.password1) {
+			} else if (!this.newPassword || !this.confirmPassword) {
 				uni.showToast({
 					title: '请检查密码',
 					icon: 'none',
@@ -177,7 +181,7 @@ export default {
 					position: 'center'
 				});
 				return;
-			} else if (this.password != this.password1) {
+			} else if (this.newPassword != this.confirmPassword) {
 				uni.showToast({
 					title: '密码不一致',
 					icon: 'none',
@@ -187,11 +191,12 @@ export default {
 				return;
 			}
 			var data = {
-				code: this.phoneCode,
-				password: this.password,
-				phone: this.userPhone
+				phone: this.phone, //手机号
+				newPassword: this.newPassword, // 新密码
+				confirmPassword: this.confirmPassword, // 确认密码
+				valCode: this.valCode //短信验证码
 			};
-			this.$http.post('/api/common/mb/changePwd', data).then(res => {
+			this.$http.post('/resetPassword', data).then(res => {
 				if (res.data.code == 200) {
 					uni.showToast({
 						title: '修改成功',
@@ -201,12 +206,15 @@ export default {
 					});
 					uni.removeStorageSync('userId');
 					uni.removeStorageSync('token');
-					uni.reLaunch({
-						url: '../passwordLogin/passwordLogin'
-					});
+					setTimeout(function(){
+						uni.navigateBack({
+							
+						})
+					},1000)
+					
 				} else {
 					uni.showToast({
-						title: res.data.message,
+						title: res.data.msg,
 						icon: 'none',
 						duration: 2000,
 						position: 'center'
@@ -220,7 +228,7 @@ export default {
 
 <style lang="less">
 page {
-	background-color: #F2F2F2;
+	background-color: #f2f2f2;
 }
 .padding_bottomNo {
 	padding-bottom: 4%;
@@ -246,7 +254,7 @@ page {
 
 .btn_bd {
 	height: 90upx;
-	background: #98D0AB;
+	background: #98d0ab;
 	border-radius: 10upx;
 	text-align: center;
 	align-items: center;
@@ -257,6 +265,9 @@ page {
 	border-radius: 50upx;
 	position: absolute;
 	bottom: 5%;
-	width: 94%;
+	width: 90%;
+}
+.border_bottom {
+	border: none;
 }
 </style>

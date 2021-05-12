@@ -188,6 +188,9 @@ export default {
 		this.getMoney(); //获取金额
 		this.getEacherData(); //获取产品数据图表
 		this.getBottomList(); //获取列表数据
+		console.log('我在这')
+		let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+		console.log(routes)
 	},
 	methods: {
 		//获取开始时间

@@ -13,15 +13,17 @@
 						<view class="wp-45">
 							<view class="fs-25 color-29 fw-700">随货同行单</view>
 							<view class="mt-10" style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;">
+								<image :src="imgLefturl" style="width: 100%;height: 100%;" mode=""></image>
 								<!-- <image src="../../../static/images/add.png" style="width: 38upx;height: 38upx;margin-top: 50upx;" mode=""></image> -->
 							</view>
 						</view>
 						<view class="wp-45" style="margin-left: 5%;">
 							<view class="fs-25 color-29 fw-700">上传随货同行单</view>
-							<view class="mt-10"  style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;">
-								<image v-if="imgFalg" :src="tradeImage" @click="uplodImg"  style="width:100% !important;height:139upx !important;" mode=""></image>
-								<image v-else @click="uplodImg" src="../../../static/images/add.png" style="width:38upx;height: 38upx;margin-top: 50upx;" mode=""></image>
+							<view class="mt-10" @click="uplodImg" v-if="!imgFalg" style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;">
+								<image   src="../../../static/images/add.png" style="width:38upx;height: 38upx;margin-top: 50upx;" mode=""></image>
 							</view>
+							<image class="mt-10" v-if="imgFalg" @click="uplodImg" :src="tradeImage" style="width: 100%;height: 139upx;" mode=""></image>
+							
 						</view>
 					</view>
 				</view>
@@ -132,7 +134,7 @@
 			</view>
 
 			<view class="moudel_width">
-				<view class="btn_bd_t">总金额：{{orderDetail.duePay}}（元）</view>
+				<view class="btn_bd_t">总金额：{{ orderDetail.duePay }}（元）</view>
 
 				<view class="moudel_list mt-40 pt-20">
 					<view class="flex ">
@@ -163,7 +165,8 @@ export default {
 				createTime: '2021-04-26'
 			},
 			imgFalg: false,
-			tradeImage: ''
+			tradeImage: '',
+			imgLefturl: ''
 		};
 	},
 	onLoad(option) {
@@ -180,10 +183,9 @@ export default {
 			this.orderId = option.orderId;
 			this.getOrderDetail();
 		}
-		if(option.type != 3){
+		if (option.type != 3) {
 			this.getImg();
 		}
-		
 	},
 
 	methods: {
@@ -198,8 +200,10 @@ export default {
 		},
 		// 获取随行单图片
 		getImg: function() {
-			this.$http.get('/file/download/from-202104200002-101-1.png', '', true).then(res => {
-				console.log(res);
+			let url = '/file/download/from-' + this.orderId + '-152-51.png';
+			this.imgLefturl = 'http://121.89.193.22:9090/file/download/from-' + this.orderId + '-152-51.png';
+			this.$http.get(url, '', true).then(res => {
+				// this.imgLefturl= res
 			});
 		},
 		//上传图片

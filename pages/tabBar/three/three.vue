@@ -406,8 +406,30 @@ export default {
 				type: this.typeTab,
 				status: this.typeTwo,
 				startDate: this.startDateOne,
-				endDate: this.endDateOne
+				endDate: this.endDateOne,
+				// "needSelfConfirm": "",//待己方确认 
+				// "needOtherConfirm": ""//待对方确认
+
 			};
+			if(this.typeTab == 's1'){
+				if(this.userType == 'fabricators'){
+					if(data.status == "waiting_dealer_confirm"){
+						data.needSelfConfirm = "0",
+						data.needOtherConfirm = "1"
+					}else if(data.status == 'waiting_self_confirm'){
+						data.needSelfConfirm = "1",
+						data.needOtherConfirm = "0"
+					}
+				}else if(this.userType == 'supplier'){
+					if(data.status == "waiting_dealer_confirm"){
+						data.needSelfConfirm = "0",
+						data.needOtherConfirm = "1"
+					}else if(data.status == 'waiting_self_confirm'){
+						data.needSelfConfirm = "1",
+						data.needOtherConfirm = "0"
+					}
+				}
+			}
 			this.$http.post('/system/orders/status', data, true).then(res => {
 				console.log(res);
 				if (res.data.code == 200) {
