@@ -1,0 +1,520 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/guide/guide",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark"
+				},
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark"
+				},
+				"enablePullDownRefresh": false
+			}
+		}
+
+		, {
+			"path": "pages/tabBar/one/one",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/tabBar/two/two",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/three",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userAgreement/userAgreement",
+			"style": {
+				"navigationBarTitleText": "服务协议",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userPrivacy/userPrivacy",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/noPassword/noPassword",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/msg/msg",
+			"style": {
+				"navigationBarTitleText": "消息中心",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/msgDetails/msgDetails",
+			"style": {
+				"navigationBarTitleText": "消息详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/revenueList/revenueList",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/revenueListDetail/revenueListDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/revenueDetailed/revenueDetailed",
+			"style": {
+				"navigationBarTitleText": "收益详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/revenueAgent/revenueAgent",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/transactionList/transactionList",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/transactionList/detail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/transactionList/administration",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/two/shopDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/two/transactionDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/machines",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/machinesDetail",
+			"style": {
+				"navigationBarTitleText": "机具详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/statistics",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/statisticsAgent",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/riskWarning",
+			"style": {
+				"navigationBarTitleText": "机具风险预警",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/transfer",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/recovery",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/apply",
+			"style": {
+				"navigationBarTitleText": "机具申领",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/list",
+			"style": {
+				"navigationBarTitleText": "申领记录",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/result",
+			"style": {
+				"navigationBarTitleText": "申领结果",
+				"enablePullDownRefresh": false
+			}
+
+		}
+
+		, {
+			"path": "pages/tabBar/one/reward",
+			"style": {
+				"navigationBarTitleText": "达标奖励",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/newlyAdded",
+			"style": {
+				"navigationBarTitleText": "新增代理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/address",
+			"style": {
+				"navigationBarTitleText": "收货地址",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/addAddress",
+			"style": {
+				"navigationBarTitleText": "收货地址",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/security",
+			"style": {
+				"navigationBarTitleText": "安全管理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/promotion",
+			"style": {
+				"navigationBarTitleText": "晋升说明",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
+				"enablePullDownRefresh": false
+			}
+
+		}
+
+		, {
+			"path": "pages/user/about",
+			"style": {
+				"navigationBarTitleText": "关于我们",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/userData",
+			"style": {
+				"navigationBarTitleText": "实名认证",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/bankCard",
+			"style": {
+				"navigationBarTitleText": "银行卡",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/password",
+			"style": {
+				"navigationBarTitleText": "修改密码",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/jurisdiction",
+			"style": {
+				"navigationBarTitleText": "权限管理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/jDetail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userData/cancellation",
+			"style": {
+				"navigationBarTitleText": "注销",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/wallet",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/withdrawal",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/withdrawalResult",
+			"style": {
+				"navigationBarTitleText": "提现结果",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/withdrawalList",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/accountSelection/accountSelection",
+			"style": {
+				"navigationBarTitleText": "机构选择",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/teamList/teamList",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/two/detail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/statisticsDetail",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/tabBar/three/detailOne",
+			"style": {
+				"app-plus": {
+					"titleNView": false,
+					"backgroundTextStyle": "dark",
+					"scrollIndicator": "none"
+				},
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#333333",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/tabBar/one/one",
+				"enablePullDownRefresh": false,
+				"text": "首页",
+				"iconPath": "static/images/icon/tabOne1.png",
+				"selectedIconPath": "static/images/icon/tabOne.png"
+			},
+			{
+				"pagePath": "pages/tabBar/two/two",
+				"enablePullDownRefresh": false,
+				"text": "圈子",
+				"iconPath": "static/images/icon/tabTwo1.png",
+				"selectedIconPath": "static/images/icon/tabTwo.png"
+			}, {
+				"pagePath": "pages/tabBar/three/three",
+				"enablePullDownRefresh": false,
+				"text": "机具",
+				"iconPath": "static/images/icon/tabThree.png",
+				"selectedIconPath": "static/images/icon/tabThree1.png"
+			}
+		]
+	}
+
+}

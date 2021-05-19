@@ -1,0 +1,29 @@
+
+/*调试专线，项目结束后可删除*/
+$colors: (
+  in: #555555,
+  ff:#ffffff,
+  2d:#2D2D2D,
+  aa:#AAAAAA,
+  fa:#FAFAFA,
+  99:#999999,
+  33:#333333,
+  f5:#f55050,
+  3c:#33CC99,
+  fc:#FFC048,
+  70:#70CC81,
+  ee:#EEEEEE,
+  44:#444444,
+  27:#2F70C7
+);
+
+@each $key, $value in $colors {
+  .bg-#{$key} {
+    background-color: $value !important;
+  }
+}
+@each $key, $value in $colors {
+  .color-#{$key} {
+    color: $value !important;
+  }
+}
