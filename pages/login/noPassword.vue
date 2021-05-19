@@ -1,12 +1,12 @@
 <template>
 	<view class="moudel_width">
 		<view class="moudel_list mt-30">
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">联系人</view>
 
 				<view class="ml-30 fs-30"><input type="text"  placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">手机号</view>
 
 				<view class="ml-30 fs-30" v-if="falgInput == 'login'">
@@ -14,7 +14,7 @@
 				</view>
 				<view class="ml-30 fs-30 " v-else>{{ userPhone }}</view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">验证码</view>
 				<view class="flex wp-90">
 					<view class="font_size28" style="margin-left: 5.3%;width: 67%;">
@@ -26,7 +26,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="flex border_bottom padding_bottomNo padding_bottomNo1">
+			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30">新密码</view>
 				<view class="ml-30 fs-30 "><input type="password" v-model="newPassword" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
 			</view>
@@ -267,7 +267,8 @@ page {
 	bottom: 5%;
 	width: 90%;
 }
-.border_bottom {
-	border: none;
+.border_bottom_r {
+	// border: none;
+	border-bottom: ;
 }
 </style>

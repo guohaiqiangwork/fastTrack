@@ -32,7 +32,7 @@
 				</view>
 				<view class="flex pt-30">
 					<view class="fs-25 color-29 wp-20 mt-25 text-center">数量：</view>
-					<view class="wp-80 "><input class="input_m pl-20" type="number" value="" v-model="number" placeholder="请输入单价（KG）" /></view>
+					<view class="wp-80 "><input class="input_m pl-20" type="number" value="" v-model="number" placeholder="请输入数量（KG）" /></view>
 				</view>
 
 				<view class="btn_bd mt-60" @click="okButtom">确认</view>

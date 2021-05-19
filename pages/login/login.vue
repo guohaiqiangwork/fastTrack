@@ -7,7 +7,7 @@
 				<view class="input_moudel">
 					<view class="flex input_list">
 						<view class="wp-10 text-center mt-10"><image style="width: 26upx;height: 30upx;" src="../../static/images/icon/log1.png" mode=""></image></view>
-						<view class="wp-80 pl-20 "><input type="text" v-model="username" value="" placeholder="请输入账号" placeholder-style="color:#fff;font-size:30upx" /></view>
+						<view class="wp-80 pl-20 "><input type="text" v-model="username" value="" placeholder="输入手机号" placeholder-style="color:#fff;font-size:30upx" /></view>
 						<view class="wp-10 text-center" v-if="username.length > 1">
 							<!-- <image style="width: 26upx;height: 30upx;" src="../../static/images/icon/colse.png" mode=""></image> -->
 						</view>
@@ -61,6 +61,15 @@ export default {
 				username: this.username,
 				password: this.password
 			};
+			if (!/^1[3456789]\d{9}$/.test(this.username)) {
+				uni.showToast({
+					title: '请输入正确的11位手机号码',
+					icon: 'none',
+					duration: 1500,
+					position: 'center'
+				});
+				return false;
+			}
 			if (!this.username || !this.password) {
 				uni.showToast({
 					title: '有数据未填写',

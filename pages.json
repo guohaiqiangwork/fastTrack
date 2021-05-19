@@ -70,89 +70,72 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/tabBar/one/product",
+			"style": {
+				"navigationBarTitleText": "商品管理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/edit",
+			"style": {
+				"navigationBarTitleText": "编辑分类",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/one/details",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/two/add",
+			"style": {
+				"navigationBarTitleText": "添加商品",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/two/edit",
+			"style": {
+				"navigationBarTitleText": "编辑订单信息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/order",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/issue",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/three/transport",
+			"style": {
+				"navigationBarTitleText": "货运信息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/tabBar/four/add",
+			"style": {
+				"navigationBarTitleText": "添加联系人",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "pages/tabBar/one/product",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "商品管理",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/one/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "编辑分类",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/one/details",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/two/add",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加商品",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/two/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "编辑订单信息",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/three/order",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/three/issue",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/three/transport",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "货运信息",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/tabBar/four/add",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加联系人",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "小米商城",

@@ -19,8 +19,21 @@ export default {
 		};
 	},
 	onLoad(option) {
+		console.log(option);
 		this.memberData = this.$member.memberObj;
-		this.shareIdUrl = this.memberData.hostUrl + '/#/' + 'pages/login/register?shareId=' + option.shareId + '&title=' + '信息补全';
+		this.shareIdUrl =
+			this.memberData.hostUrl +
+			'/#/' +
+			'pages/login/register?shareId=' +
+			option.shareId +
+			'&title=' +
+			'邀请注册' +
+			'&comName=' +
+			option.comName +
+			'&phone=' +
+			option.phone +
+			'&leader=' +
+			option.leader;
 		console.log(this.shareIdUrl);
 	},
 	methods: {

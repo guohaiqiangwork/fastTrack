@@ -222,12 +222,15 @@ export default {
 				this.searchFalg = false;
 				this.consignorData.name = item.comName;
 				this.consignorData.bankCard = item.bankAccount;
-				this.consignorData.phone = item.phone;
+				this.consignorData.phone = item.phone; 
+
+				uni.setStorageSync('comId',item.comId); //用户ID
 			} else {
 				this.searchFalgXs = false;
 				this.consigneeData.comName = item.comName;
 				this.consigneeData.leader = item.leader;
 				this.consigneeData.phone = item.phone;
+				uni.setStorageSync('comId',item.comId); //用户ID
 				
 			}
 		},

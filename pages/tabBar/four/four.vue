@@ -157,6 +157,15 @@ export default {
 				phone: this.phone,
 				leader: this.leader
 			};
+			if (!/^1[3456789]\d{9}$/.test(this.phone)) {
+				uni.showToast({
+					title: '请输入正确的11位手机号码',
+					icon: 'none',
+					duration: 1500,
+					position: 'center'
+				});
+				return false;
+			} 
 			if (!this.comName || !this.phone || !this.leader) {
 				uni.showToast({
 					title: '有数据未填写',
@@ -170,7 +179,7 @@ export default {
 				console.log(JSON.stringify(res));
 				if (res.data.code == 200) {
 					uni.navigateTo({
-						url: './add?shareId=' + res.data.data
+						url: './add?shareId=' + res.data.data +'&comName=' + this.comName + '&phone=' + this.phone + '&leader=' + this.leader
 					});
 				} else {
 					uni.showToast({

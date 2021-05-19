@@ -12,7 +12,7 @@
 			</view>
 			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">身份证号</view>
-				<view class="ml-30 fs-30 wp-75"><input v-model="cardId" maxlength="18" type="number" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" /></view>
+				<view class="ml-30 fs-30 wp-75"><input v-model="cardId" maxlength="18" type="text" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" /></view>
 			</view>
 			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
 				<view class="wp-20 fs-30 color-33">联系人</view>
@@ -75,19 +75,25 @@ export default {
 	},
 	mounted() {},
 	onLoad(option) {
+		console.log(option);
 		console.log(JSON.stringify(option.shareId) + '验证码数据');
 		if (option.shareId) {
 			this.shareId = option.shareId;
 			this.title = option.title;
+			this.userName = option.leader;
+			this.comName = option.comName;
+			this.phone = option.phone;
 			uni.setNavigationBarTitle({
 				title: this.title
 			});
-			this.getMydata();
+		} else {
+			// this.getMydata();
 		}
 	},
 	methods: {
 		// 用户进行注册
 		getRegister: function() {
+			
 			var data = {
 				address: this.address,
 				bankAccount: this.bankAccount,
@@ -128,7 +134,15 @@ export default {
 			// 注册 和信息补全
 			this.$http.post(dataUrl, data).then(res => {
 				if (res.data.code == 200) {
-					uni.navigateBack();
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 2000,
+						position: 'center'
+					});
+					uni.navigateTo({
+						url:'./login'
+					})
 				} else {
 					uni.showToast({
 						title: res.data.msg,
@@ -136,6 +150,7 @@ export default {
 						duration: 2000,
 						position: 'center'
 					});
+					// uni.navigateBack();
 					// uni.navigateTo({
 					// 	url:'../model/model?title=' + '关联账户' + '&type=register'
 					// })
@@ -188,7 +203,7 @@ export default {
 			};
 			let url = '/sms/reg/' + this.phone;
 			that.$http
-				.get(url,'', false)
+				.get(url, '', false)
 				.then(res => {
 					if (res.data.code == 200) {
 						that.countdown = 60;

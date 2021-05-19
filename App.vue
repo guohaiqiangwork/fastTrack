@@ -1,5 +1,6 @@
 <script>
 import Vue from 'vue';
+import './components/http/http1.js';
 export default {
 	onLaunch: function() {
 		uni.getSystemInfo({
@@ -65,7 +66,7 @@ export default {
 .bor_bottom_s {
 	border-bottom: 1px solid #a77845;
 }
-.border_bottom_r{
+.border_bottom_r {
 	border-bottom: 1px solid #fbc941;
 }
 .listName {

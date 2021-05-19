@@ -171,7 +171,7 @@ export default {
 				bankCard: '',
 				phone: ''
 			}, //发货人信息
-			totalPrice: '', //总数
+			totalPrice:0, //总数
 			consigneeDataX: '',
 			fromFalg: '',
 			urlfalg: '',
@@ -217,23 +217,32 @@ export default {
 		if (uni.getStorageSync('fromFalg')) {
 			//采购单数据
 			if (uni.getStorageSync('threeFalg') == 1) {
-				this.fromFalg = uni.getStorageSync('fromFalg');
-				this.orderId = uni.getStorageSync('orderId');
-				this.typeTab = uni.getStorageSync('threeFalg');
-				let url = '/system/orders/' + this.orderId;
-				this.$http.get(url, '', true).then(res => {
+				let _this =  this;
+				_this.fromFalg = uni.getStorageSync('fromFalg');
+				_this.orderId = uni.getStorageSync('orderId');
+				_this.typeTab = uni.getStorageSync('threeFalg');
+				let url = '/system/orders/' + _this.orderId;
+				_this.$http.get(url, '', true).then(res => {
 					console.log(res.data.data);
 					let resData = res.data.data;
+					let _this = this;
 					if (res.data.code == 200) {
+					
+						_this.consigneeData = {
+							comName: '',
+							address: '',
+							leader: '',
+							phone: ''
+						}, //收货人信息
 						// 发货人信息
-						this.consignorData.name = resData.sellerName;
-						this.consignorData.bankCard = resData.sellerBankAccount;
-						this.consignorData.phone = resData.sellerMobile;
+						_this.consignorData.name = resData.sellerName;
+						_this.consignorData.bankCard = resData.sellerBankAccount;
+						_this.consignorData.phone = resData.sellerMobile;
 						// 收货人信息
-						this.consigneeData.comName = resData.buyerName; //公司名称
-						this.consigneeData.address = resData.buyerArea; //公司地址
-						this.consigneeData.phone = resData.buyerMobile;
-						this.consigneeData.leader = resData.createBy;
+						_this.consigneeData.comName = resData.buyerName; //公司名称
+						_this.consigneeData.address = resData.buyerArea; //公司地址
+						_this.consigneeData.phone = resData.buyerMobile;
+						_this.consigneeData.leader = resData.createBy;
 						let dataList = [];
 						if (resData.details.length > 0) {
 							for (let i = 0; i < resData.details.length; i++) {
@@ -287,7 +296,7 @@ export default {
 						that.consignorData.comName = resData.buyerName; //公司名称
 						that.consignorData.address = resData.buyerArea; //公司地址
 						that.consignorData.phone = resData.buyerMobile;
-						that.consignorData.leader = resData.createBy;
+						that.consignorData.leader = resData.buyerComName;
 						uni.setStorageSync('consigneeDataX',that.consignorData)
 						let dataList = [];
 						if (resData.details.length > 0) {
@@ -314,16 +323,16 @@ export default {
 	onHide() {
 		// 处理从订单管理过来的数据
 		if (uni.getStorageSync('fromFalg')) {
-			uni.setStorageSync('fromFalg', '');
-			this.productlist = [];
-			this.totalPrice = 0;
-			this.fromFalg = '';
-			if (this.typeTab == 1) {
-				this.consignorData = '';
-			} else {
-				this.consigneeDataX = '';
-				this.orderDetail = '';
-			}
+			// uni.setStorageSync('fromFalg', '');
+			// this.productlist = [];
+			// this.totalPrice = 0;
+			// this.fromFalg = '';
+			// if (this.typeTab == 1) {
+			// 	this.consignorData = {};
+			// } else {
+			// 	this.consigneeDataX = {};
+			// 	this.orderDetail = {};
+			// }
 		}
 	},
 	methods: {
@@ -347,7 +356,12 @@ export default {
 		delList: function(item) {
 			let that = this;
 			that.productlist.splice(item, 1);
-			this.getTotal();
+			if(that.productlist.length == 0){
+				this.totalPrice  = 0
+			}else{
+				this.getTotal();
+			}
+			
 			uni.setStorage({
 				key: 'prictList_key',
 				data: that.productlist,

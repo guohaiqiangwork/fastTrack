@@ -4,7 +4,7 @@
 			<view class="">
 				<image class="top_img" src="../../../static/images/img/bj.png" mode=""></image>
 				<view class="one_moudel">
-					<view class="fs-32 color-29 text-center fw-600">石家庄金谷粮食加工厂</view>
+					<view class="fs-32 color-29 text-center fw-600">{{oneNameData}}</view>
 					<!-- 	<view class="input_moudel flex mt-30">
 						<view class="wp-15 text-center mt-10 mb-10" style="border-right: 1px solid #293539;">
 							<image class="mt-15" style="width: 30upx;height: 30upx;" src="../../../static/images/icon/code.png" mode=""></image>
@@ -176,12 +176,14 @@ export default {
 			dataList: [], //商品占比数据
 			totalBottom: 0,
 			bottomList: [],
-			userType: ''
+			userType: '',
+			oneNameData:''
 		};
 	},
 	onShow() {
 		// supplier
 		this.userType = uni.getStorageSync('comType');
+		this.oneNameData = uni.getStorageSync('comName')
 		if(this.userType != 'fabricators'){
 			this.active = 'b'
 		}
