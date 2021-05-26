@@ -211,7 +211,7 @@ export default {
 		// 获取收货人信息 销售单
 		if (uni.getStorageSync('consigneeDataX')) {
 			this.consigneeDataX = uni.getStorageSync('consigneeDataX');
-			console.log(this.consigneeDataX);
+			console.log(JSON.stringify(this.consigneeDataX )  + '获取带');
 		}
 		// 处理从订单管理页面过来的数据 采购订单
 		if (uni.getStorageSync('fromFalg')) {
@@ -287,17 +287,18 @@ export default {
 							phone: '',
 							leader: ''
 						};
-						
-						that.consigneeDataX.comName = resData.buyerName; //公司名称
+						console.log('我是' + JSON.stringify(resData) )
+						that.consigneeDataX.comName = resData.buyerComName ; //公司名称
 						that.consigneeDataX.address = resData.buyerArea; //公司地址
 						that.consigneeDataX.phone = resData.buyerMobile;
-						that.consigneeDataX.leader = resData.createBy;
+						that.consigneeDataX.leader = resData.buyerName;
 						// 忘了那个是赋值的的了
-						that.consignorData.comName = resData.buyerName; //公司名称
+						that.consignorData.comName = resData.buyerComName; //公司名称
 						that.consignorData.address = resData.buyerArea; //公司地址
 						that.consignorData.phone = resData.buyerMobile;
-						that.consignorData.leader = resData.buyerComName;
+						that.consignorData.leader = resData.buyerName;
 						uni.setStorageSync('consigneeDataX',that.consignorData)
+						console.log(JSON.stringify(that.consignorData) + '看看存了')
 						let dataList = [];
 						if (resData.details.length > 0) {
 							for (let i = 0; i < resData.details.length; i++) {
@@ -323,16 +324,16 @@ export default {
 	onHide() {
 		// 处理从订单管理过来的数据
 		if (uni.getStorageSync('fromFalg')) {
-			// uni.setStorageSync('fromFalg', '');
-			// this.productlist = [];
-			// this.totalPrice = 0;
-			// this.fromFalg = '';
-			// if (this.typeTab == 1) {
-			// 	this.consignorData = {};
-			// } else {
-			// 	this.consigneeDataX = {};
-			// 	this.orderDetail = {};
-			// }
+			uni.setStorageSync('fromFalg', '');
+			this.productlist = [];
+			this.totalPrice = 0;
+			this.fromFalg = '';
+			if (this.typeTab == 1) {
+				this.consignorData = {};
+			} else {
+				this.consigneeDataX = {};
+				this.orderDetail = {};
+			}
 		}
 	},
 	methods: {
@@ -400,75 +401,93 @@ export default {
 		save: function(type, urlfalg) {
 			var urlData = '';
 			var data = '';
-			if (this.typeTab == 2) {
-				//销售
-				urlData = '/system/orders/sold';
-				data = {
-					orderId: '',
-					shipperId: uni.getStorageSync('comId'),
-					confirmed: type,
-					senderName: this.consigneeData.comName,
-					senderBankAccount: this.consigneeData.bankAccount,
-					senderPhone: this.consigneeData.phone,
-					receiverName: this.consigneeDataX.leader,
-					receiverPhone: this.consigneeDataX.phone,
-					receiverAddress: this.consigneeDataX.address,
-					products: this.productlist
-				};
-			} else {
-				console.log('采购低昂单');
-				urlData = '/system/orders/procure';
-				data = {
-					orderId: '',
-					shipperId: uni.getStorageSync('comId'),
-					confirmed: type,
-					senderName: this.consignorData.name,
-					senderBankAccount: this.consignorData.bankCard,
-					senderPhone: this.consignorData.phone,
-					receiverName: this.consigneeData.comName,
-					receiverPhone: this.consigneeData.phone,
-					receiverAddress: this.consigneeData.address,
-					products: this.productlist
-				};
-				if (!data.senderName || !data.senderBankAccount) {
-					uni.showToast({
-						title: '发货人信息不能为空',
-						time: 2000,
-						icon: 'none'
-					});
-					return;
-				}
-			}
-			this.$http.post(urlData, data, true).then(res => {
+			let dataShipperId = ''
+			console.log(this.typeTab )
+			let dataName = {
+				type: this.typeTab != 2 ? 'supplier' : 'dealer',
+				name: this.typeTab != 2 ?  this.consignorData.name  : this.consigneeDataX.comName
+			};
+			this.$http.post('/system/company/search', dataName, true).then(res => {
 				if (res.data.code == 200) {
-					//销售
-					if (this.typeTab == 2) {
-						console.log(res);
-						this.consigneeDataX = '';
-					} else {
-						// uni.setStorageSync('threeFalg', 'cg'); //身份标识
-						// uni.setStorageSync('threeFalgType', '0'); //身份标识
-						this.consignorData = '';
-						uni.setStorageSync('consignor', ''); //清空发货人信息
-					}
-					this.productlist = [];
-					uni.setStorage({
-						key: 'prictList_key',
-						data: this.productlist,
-						success: function() {
-							uni.switchTab({
-								url: '../three/three'
-							});
+					if(res.data.data.length > 0){
+						dataShipperId = res.data.data[0].comId
+						if (this.typeTab == 2) {
+							//销售
+							urlData = '/system/orders/sold';
+							data = {
+								orderId: '',
+								shipperId: dataShipperId || uni.getStorageSync('comId'),
+								confirmed: type,
+								senderName: this.consigneeData.comName,
+								senderBankAccount: this.consigneeData.bankAccount,
+								senderPhone: this.consigneeData.phone,
+								receiverName: this.consigneeDataX.leader,
+								receiverPhone: this.consigneeDataX.phone,
+								receiverAddress: this.consigneeDataX.address,
+								products: this.productlist
+							};
+						} else {
+							console.log('采购低昂单');
+							urlData = '/system/orders/procure';
+							data = {
+								orderId: '',
+								shipperId:dataShipperId || uni.getStorageSync('comId'),
+								confirmed: type,
+								senderName: this.consignorData.name,
+								senderBankAccount: this.consignorData.bankCard,
+								senderPhone: this.consignorData.phone,
+								receiverName: this.consigneeData.comName,
+								receiverPhone: this.consigneeData.phone,
+								receiverAddress: this.consigneeData.address,
+								products: this.productlist
+							};
+							if (!data.senderName || !data.senderBankAccount) {
+								uni.showToast({
+									title: '发货人信息不能为空',
+									time: 2000,
+									icon: 'none'
+								});
+								return;
+							}
 						}
-					});
-				} else {
-					uni.showToast({
-						title: res.data.msg,
-						time: 2000,
-						icon: 'none'
-					});
+						this.$http.post(urlData, data, true).then(res => {
+							if (res.data.code == 200) {
+								//销售
+								if (this.typeTab == 2) {
+									console.log(res);
+									this.consigneeDataX = '';
+								} else {
+									// uni.setStorageSync('threeFalg', 'cg'); //身份标识
+									// uni.setStorageSync('threeFalgType', '0'); //身份标识
+									this.consignorData = '';
+									uni.setStorageSync('consignor', ''); //清空发货人信息
+								}
+								this.productlist = [];
+								uni.setStorage({
+									key: 'prictList_key',
+									data: this.productlist,
+									success: function() {
+										uni.switchTab({
+											url: '../three/three'
+										});
+									}
+								});
+							} else {
+								uni.showToast({
+									title: res.data.msg,
+									time: 2000,
+									icon: 'none'
+								});
+							}
+						});
+								
+					}
 				}
 			});
+			
+			return
+		
+		
 		},
 
 		//订单取消

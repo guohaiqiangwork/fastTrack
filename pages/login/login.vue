@@ -7,7 +7,7 @@
 				<view class="input_moudel">
 					<view class="flex input_list">
 						<view class="wp-10 text-center mt-10"><image style="width: 26upx;height: 30upx;" src="../../static/images/icon/log1.png" mode=""></image></view>
-						<view class="wp-80 pl-20 "><input type="text" v-model="username" value="" placeholder="输入手机号" placeholder-style="color:#fff;font-size:30upx" /></view>
+						<view class="wp-80 pl-20 "><input type="text" v-model="username" value="" placeholder="输入手机号" maxlength="11" placeholder-style="color:#fff;font-size:30upx" /></view>
 						<view class="wp-10 text-center" v-if="username.length > 1">
 							<!-- <image style="width: 26upx;height: 30upx;" src="../../static/images/icon/colse.png" mode=""></image> -->
 						</view>
@@ -94,7 +94,15 @@ export default {
 							uni.setStorageSync('leader', res.data.data.leader); //联系人名称
 							uni.setStorageSync('comId', res.data.data.comId); //用户ID
 							uni.setStorageSync('bankAccount', res.data.data.bankAccount); //存储银行卡号
-
+							uni.setStorageSync('fromFalg', '');
+							uni.setStorageSync('consignorData', '');
+							uni.setStorageSync('consigneeDataX', '');
+							uni.setStorageSync('orderDetail', '');
+							uni.setStorage({
+								key: 'prictList_key',
+								data: [],
+								success: function() {}
+							});
 							uni.switchTab({
 								url: '../tabBar/one/one'
 							});

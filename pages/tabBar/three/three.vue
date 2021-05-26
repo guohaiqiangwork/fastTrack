@@ -123,7 +123,7 @@
 								<!-- <view class=" ">商品：硬粟米（1级）</view> -->
 								<view class="flex justify-between">
 									<view class=""></view>
-									<view class="color-a7" @click="goUrl(item)" v-if="typeTwo == 'waiting_self_confirm' || typeTwo == 'received_goods'">点击查看</view>
+									<view class="color-a7" @click="goUrl(item)" v-if="typeTwo == 'waiting_self_confirm' || typeTwo == 'waiting_pay_money'">点击查看</view>
 								</view>
 							</view>
 						</view>
@@ -149,7 +149,7 @@
 									<view
 										class="color-a7"
 										@click="goUrl(item)"
-										v-if="typeTwo == 'new' || typeTwo == 'cancelled' || typeTwo == 'waiting_self_confirm' || typeTwo == 'waiting_send_goods'"
+										v-if="typeTwo == 'new' || typeTwo == 'cancelled' || typeTwo == 'waiting_provider_confirm' || typeTwo == 'waiting_send_goods'"
 									>
 										点击查看
 									</view>
@@ -180,7 +180,6 @@
 					</block>
 				</view>
 
-
 				<!-- 供应商 -->
 				<view class="" v-if="userType == 'dealer'">
 					<!-- 销售单 -->
@@ -197,7 +196,7 @@
 								<view class="flex justify-between">
 									<view class=""></view>
 
-									<view class="color-a7" @click="goUrl(item)" v-if="typeTwo == 'cancelled' || typeTwo == 'waiting_self_confirm' || typeTwo == 'sent_goods'">
+									<view class="color-a7" @click="goUrl(item)" v-if="typeTwo == 'cancelled' || typeTwo == 'waiting_dealer_confirm' || typeTwo == 'sent_goods'">
 										点击查看
 									</view>
 								</view>
@@ -320,14 +319,15 @@ export default {
 					type: 's1'
 				}
 			];
+
 			this.twoList = [
 				{
-					title: '待供应商确认',
-					type: 'waiting_provider_confirm'
+					title: '待收货商确认',
+					type: 'waiting_self_confirm'
 				},
 				{
 					title: '待己方确认',
-					type: 'waiting_self_confirm'
+					type: 'waiting_provider_confirm'
 				},
 				{
 					title: '待发货',
@@ -364,11 +364,11 @@ export default {
 			this.twoList = [
 				{
 					title: '待供应商确认',
-					type: 'waiting_provider_confirm'
+					type: 'waiting_self_confirm'
 				},
 				{
 					title: '待己方确认',
-					type: 'waiting_self_confirm'
+					type: 'waiting_dealer_confirm'
 				},
 				{
 					title: '待发货',
@@ -393,7 +393,7 @@ export default {
 					type: 'cancelled'
 				}
 			];
-			this.typeTwo = 'waiting_provider_confirm';
+			this.typeTwo = 'waiting_self_confirm';
 			this.typeTab = 's';
 		}
 		this.getList();
@@ -406,32 +406,33 @@ export default {
 				type: this.typeTab,
 				status: this.typeTwo,
 				startDate: this.startDateOne,
-				endDate: this.endDateOne,
-				// "needSelfConfirm": "",//待己方确认 
-				// "needOtherConfirm": ""//待对方确认
-
+				endDate: this.endDateOne
 			};
-			if(this.typeTab == 's1'){
-				if(this.userType == 'fabricators'){
-					if(data.status == "waiting_dealer_confirm"){
-						data.needSelfConfirm = "0",
-						data.needOtherConfirm = "1"
-					}else if(data.status == 'waiting_self_confirm'){
-						data.needSelfConfirm = "1",
-						data.needOtherConfirm = "0"
+			if (this.typeTab == 's1') {
+				if (this.userType == 'fabricators') {
+					//加工商
+					console.log('8');
+					if (data.status == 'waiting_dealer_confirm') {
+						(data.needSelfConfirm = '1'), (data.needOtherConfirm = '0');
+					} else if (data.status == 'waiting_self_confirm') {
+						(data.needSelfConfirm = '0'), (data.needOtherConfirm = '1');
+					} else if (data.status == 'waiting_pay_money') {
+						data.status = 'received_goods';
 					}
-				}else if(this.userType == 'supplier'){
-					if(data.status == "waiting_dealer_confirm"){
-						data.needSelfConfirm = "0",
-						data.needOtherConfirm = "1"
-					}else if(data.status == 'waiting_self_confirm'){
-						data.needSelfConfirm = "1",
-						data.needOtherConfirm = "0"
+				} else if (this.userType == 'supplier') {
+					//经销商
+					if (data.status == 'waiting_dealer_confirm') {
+						(data.needSelfConfirm = '0'), (data.needOtherConfirm = '1');
+					} else if (data.status == 'waiting_self_confirm') {
+						(data.needSelfConfirm = '1'), (data.needOtherConfirm = '0');
 					}
 				}
 			}
+
+			console.log(JSON.stringify(data));
+
 			this.$http.post('/system/orders/status', data, true).then(res => {
-				console.log(res);
+				// console.log(res);
 				if (res.data.code == 200) {
 					this.orderList = res.data.data;
 				} else {
@@ -446,12 +447,12 @@ export default {
 
 		//获取开始时间
 		bindDateChange: function(e) {
-			console.log(e.detail.value);
+			// console.log(e.detail.value);
 			this.startDateOne = e.detail.value;
 		},
 		// 获取结束时间
 		bindDateChangeEnd: function(e) {
-			console.log(e.detail.value);
+			// console.log(e.detail.value);
 			this.endDateOne = e.detail.value;
 		},
 		tabOne: function(item) {
@@ -471,7 +472,7 @@ export default {
 						},
 						{
 							title: '待付款',
-							type: 'received_goods'
+							type: 'waiting_pay_money'
 						},
 						{
 							title: '已付款',
@@ -480,6 +481,44 @@ export default {
 					];
 					this.twolistA = [];
 					this.typeTwo = 'waiting_dealer_confirm';
+				} else if (item == 's') {
+					this.twoList = [
+						{
+							title: '未提交',
+							type: 'new'
+						},
+						{
+							title: '待收货商确认',
+							type: 'waiting_dealer_confirm'
+						},
+						{
+							title: '待己方确认',
+							type: 'waiting_self_confirm'
+						},
+						{
+							title: '待发货',
+							type: 'waiting_send_goods'
+						}
+					];
+					this.twolistA = [
+						{
+							title: '已发货',
+							type: 'sent_goods'
+						},
+						{
+							title: '已收货',
+							type: 'received_goods'
+						},
+						{
+							title: '已付款',
+							type: 'paid_money'
+						},
+						{
+							title: '已取消',
+							type: 'cancelled'
+						}
+					];
+					this.typeTwo = 'new';
 				} else {
 					this.twoList = [
 						{
@@ -590,7 +629,7 @@ export default {
 		// 去查看
 		goUrl: function(item) {
 			var dataItem = item;
-			console.log(dataItem);
+			// console.log(dataItem);
 			// 加工商
 			if (this.userType == 'fabricators') {
 				switch (this.typeTab) {
@@ -656,7 +695,7 @@ export default {
 									url: './issue?title=发货单' + '&type=2' + '&orderId=' + dataItem.id
 								});
 								break;
-							case 'received_goods':
+							case 'waiting_pay_money':
 								uni.navigateTo({
 									url: './issue?title=发货单' + '&type=3' + '&orderId=' + dataItem.id
 								});
@@ -665,14 +704,14 @@ export default {
 
 						break;
 					default:
-						console.log(this.typeTwo);
+					// console.log(this.typeTwo);
 				}
 			} else if (this.userType == 'supplier') {
 				//供应商
 				switch (this.typeTab) {
 					case 'b':
 						switch (this.typeTwo) {
-							case 'waiting_self_confirm':
+							case 'waiting_provider_confirm':
 								uni.navigateTo({
 									url: './order?title=销售单' + '&type=5' + '&orderId=' + dataItem.id
 								});
@@ -705,14 +744,14 @@ export default {
 
 						break;
 					default:
-						console.log(this.typeTwo);
+					// console.log(this.typeTwo);
 				}
 			} else if (this.userType == 'dealer') {
 				//经销商
 				switch (this.typeTab) {
 					case 's':
 						switch (this.typeTwo) {
-							case 'waiting_self_confirm':
+							case 'waiting_dealer_confirm':
 								uni.navigateTo({
 									url: './order?title=销售单' + '&type=5' + '&orderId=' + dataItem.id
 								});
@@ -730,7 +769,7 @@ export default {
 						}
 						break;
 					default:
-						console.log(this.typeTwo);
+					// console.log(this.typeTwo);
 				}
 			}
 		},
@@ -770,7 +809,7 @@ export default {
 				this.endDateOne = '';
 			}
 			return;
-			console.log(this.dataIndex);
+			// console.log(this.dataIndex);
 			var data = {
 				mbId: uni.getStorageSync('userId'),
 				endTime: this.endDateOne,

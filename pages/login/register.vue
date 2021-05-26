@@ -1,54 +1,59 @@
 <template>
-	<view class="moudel_width">
-		<view class="moudel_list mt-30">
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">公司名称</view>
+	<view class="">
+		<view class="moudel_width" >
+			<view class="moudel_list mt-30">
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">公司名称</view>
 
-				<view class="ml-30 fs-30"><input v-model="comName" placeholder="请输入公司名称" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">银行卡号</view>
-				<view class="ml-30 fs-30 wp-75"><input v-model="bankAccount" maxlength="19" type="number" placeholder="请输入银行卡号" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">身份证号</view>
-				<view class="ml-30 fs-30 wp-75"><input v-model="cardId" maxlength="18" type="text" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">联系人</view>
-				<view class="ml-30 fs-30"><input v-model="userName" type="text" placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">联系电话</view>
-				<view class="ml-30 fs-30"><input v-model="phone" type="number" maxlength="11" placeholder="请输入联系电话" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">地址</view>
-				<view class="ml-30 fs-30 wp-80"><input v-model="address" type="text" placeholder="请输入地址" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30 color-33">邮箱</view>
-				<view class="ml-30 fs-30"><input v-model="email" placeholder="请输入邮箱" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30">密码设置</view>
-				<view class="ml-30 fs-30 "><input v-model="password" type="password" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
-			</view>
-			<view class="flex  padding_bottomNo padding_bottomNo1">
-				<view class="wp-20 fs-30">验证码</view>
-				<view class="flex wp-90">
-					<view class="font_size28   " style="margin-left: 5.3%;width: 67%;">
-						<input v-model="valCode" type="number" maxlength="6" placeholder="请输入验证码" placeholder-style="color:#cccccc" />
+					<view class="ml-30 fs-30"><input v-model="comName" placeholder="请输入公司名称" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">银行卡号</view>
+					<view class="ml-30 fs-30 wp-75">
+						<input v-model="bankAccount" maxlength="19" type="number" placeholder="请输入银行卡号" placeholder-style="color:#cccccc" />
 					</view>
-					<view class="wp_33 text-center fs-30 color-f5" @click="yzm_function">
-						{{ countdown }}
-						<text v-show="timestatus" class="forgetpwd2">秒重获</text>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">身份证号</view>
+					<view class="ml-30 fs-30 wp-75">
+						<input v-model="cardId" maxlength="18" type="text" placeholder="请输入银行卡身份证号" placeholder-style="color:#cccccc" />
+					</view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">联系人</view>
+					<view class="ml-30 fs-30"><input v-model="userName" type="text" placeholder="请输入联系人" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">联系电话</view>
+					<view class="ml-30 fs-30"><input v-model="phone" type="number" maxlength="11" placeholder="请输入联系电话" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">地址</view>
+					<view class="ml-30 fs-30 wp-80"><input v-model="address" type="text" placeholder="请输入地址" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30 color-33">邮箱</view>
+					<view class="ml-30 fs-30"><input v-model="email" placeholder="请输入邮箱" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex border_bottom_r padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30">密码设置</view>
+					<view class="ml-30 fs-30 "><input v-model="password" type="password" placeholder="请输入密码" placeholder-style="color:#cccccc" /></view>
+				</view>
+				<view class="flex  padding_bottomNo padding_bottomNo1">
+					<view class="wp-20 fs-30">验证码</view>
+					<view class="flex wp-90">
+						<view class="font_size28   " style="margin-left: 5.3%;width: 67%;">
+							<input v-model="valCode" type="number" maxlength="6" placeholder="请输入验证码" placeholder-style="color:#cccccc" />
+						</view>
+						<view class="wp_33 text-center fs-30 color-f5" @click="yzm_function">
+							{{ countdown }}
+							<text v-show="timestatus" class="forgetpwd2">秒重获</text>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-
-		<view class="btn_bd" @click="getRegister">确认</view>
+		<view class="btn_moudel"><view class="btn_bd" @click="getRegister">确认</view></view>
 	</view>
 </template>
 
@@ -93,7 +98,6 @@ export default {
 	methods: {
 		// 用户进行注册
 		getRegister: function() {
-			
 			var data = {
 				address: this.address,
 				bankAccount: this.bankAccount,
@@ -141,8 +145,8 @@ export default {
 						position: 'center'
 					});
 					uni.navigateTo({
-						url:'./login'
-					})
+						url: './login'
+					});
 				} else {
 					uni.showToast({
 						title: res.data.msg,
@@ -334,19 +338,25 @@ page {
 	height: 30upx;
 }
 
-.btn_bd {
-	height: 90upx;
-	background: #98d0ab;
-	border-radius: 10upx;
-	text-align: center;
-	align-items: center;
-	color: #ffffff;
-	font-size: 30upx;
-	line-height: 90upx;
-	margin-top: 30upx;
-	border-radius: 50upx;
-	position: absolute;
-	bottom: 5%;
-	width: 90%;
+.btn_moudel {
+	position: fixed;
+	bottom: 0;
+	background-color: #ffffff;
+	width: 100%;
+	    padding-bottom: 30upx;
+	.btn_bd {
+		height: 90upx;
+		background: #98d0ab;
+		border-radius: 10upx;
+		text-align: center;
+		align-items: center;
+		color: #ffffff;
+		font-size: 30upx;
+		line-height: 90upx;
+		margin-top: 30upx;
+		border-radius: 50upx;
+		width: 90%;
+		margin-left: 5%;
+	}
 }
 </style>
