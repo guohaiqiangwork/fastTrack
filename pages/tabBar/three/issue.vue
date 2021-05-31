@@ -14,7 +14,6 @@
 							<view class="fs-25 color-29 fw-700">随货同行单</view>
 							<view class="mt-10" style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;">
 								<image :src="imgLefturl" style="width: 100%;height: 100%;" mode=""></image>
-								<!-- <image src="../../../static/images/add.png" style="width: 38upx;height: 38upx;margin-top: 50upx;" mode=""></image> -->
 							</view>
 						</view>
 						<view class="wp-45" style="margin-left: 5%;">
@@ -171,7 +170,7 @@ export default {
 			imgFalg: false,
 			tradeImage: '',
 			imgLefturl: '',
-			pageType:'',//从那来的
+			pageType: '' //从那来的
 		};
 	},
 	onLoad(option) {
@@ -191,8 +190,8 @@ export default {
 		if (option.type != 3) {
 			// this.getImg();
 		}
-		if(option.pageType){
-			this.pageType = option.pageType
+		if (option.pageType) {
+			this.pageType = option.pageType;
 		}
 	},
 
@@ -203,16 +202,21 @@ export default {
 			this.$http.get(url, '', true).then(res => {
 				if (res.data.code == 200) {
 					this.orderDetail = res.data.data;
-					this.getImg()
+					this.getImg();
 				}
 			});
-			
 		},
 		// 获取随行单图片
 		getImg: function() {
-			let url = '/file/download/from-' + this.orderId + '-152-51.png';
-			this.imgLefturl = 'http://121.89.193.22:9090/file/download/' + this.orderDetail.attachedSentTradeImage ;
-			console.log(this.imgLefturl)
+			// attachedSentTradeImage
+			// attachedReceivedTradeImage
+			// let url = '/file/download/from-' + this.orderId + '-152-51.png';
+			this.imgLefturl = 'http://121.89.193.22:9090/file/download/' + this.orderDetail.attachedSentTradeImage;
+			console.log(this.imgLefturl);
+			if (this.orderDetail.attachedReceivedTradeImage) {
+				this.imgFalg = true;
+				this.tradeImage = 'http://121.89.193.22:9090/file/download/' + this.orderDetail.attachedReceivedTradeImage;
+			}
 			// this.$http.get(url, '', true).then(res => {
 			// 	// this.imgLefturl= res
 			// });
@@ -251,12 +255,6 @@ export default {
 		okOrder: function(item) {
 			if (item == 'true') {
 				let data = {
-					// id: this.orderDetail.id,
-					// comment: '', //备注
-					// confirmed: item, //是否确认
-					// products: this.orderDetail.detail, //产品重量
-					// tradeImage: this.tradeImage,
-
 					orderId: this.orderDetail.id,
 					done: 'true',
 					comment: '',
@@ -270,14 +268,13 @@ export default {
 
 				this.$http.post('/system/orders/update/logistics', data, true).then(res => {
 					if (res.data.code == 200) {
-						if(this.pageType == '发货'){
+						if (this.pageType == '发货') {
 							uni.switchTab({
-								url:'./three'
-							})
-						}else{
-								uni.navigateBack({});
+								url: './three'
+							});
+						} else {
+							uni.navigateBack({});
 						}
-					
 					} else {
 						uni.showToast({
 							title: res.data.msg,
@@ -294,13 +291,13 @@ export default {
 
 				this.$http.post('/system/orders/cancel', data, true).then(res => {
 					if (res.data.code == 200) {
-					if(this.pageType == '发货'){
-						uni.switchTab({
-							url:'./three'
-						})
-					}else{
+						if (this.pageType == '发货') {
+							uni.switchTab({
+								url: './three'
+							});
+						} else {
 							uni.navigateBack({});
-					}
+						}
 					} else {
 						uni.showToast({
 							title: res.data.msg,

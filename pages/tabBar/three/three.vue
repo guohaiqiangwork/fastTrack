@@ -300,9 +300,9 @@ export default {
 
 	onShow() {
 		// 加工商订单创建过来的
-		if (uni.getStorageSync('threeFalg') == 'cg') {
+		if (uni.getStorageSync('threeFalgTab') == 'cg') {
 			this.typeTab = 'b';
-		}else if (uni.getStorageSync('threeFalg') == 'xs') {
+		}else if (uni.getStorageSync('threeFalgTab') == 'xs') {
 			this.typeTab = 's';
 		}
 		this.userType = uni.getStorageSync('comType');
@@ -399,7 +399,7 @@ export default {
 	},
 	onLoad() {},
 	onHide() {
-		uni.setStorageSync('threeFalg', ''); //身份标识
+		uni.setStorageSync('threeFalgTab', ''); //身份标识
 	},
 	methods: {
 		// 订单列表获取
@@ -675,9 +675,11 @@ export default {
 								uni.setStorageSync('orderId', item.id);
 								uni.setStorageSync('threeFalg', 1);
 								uni.setStorageSync('fromFalg', 'three');
-								uni.switchTab({
-									url: '../two/two'
-								});
+								setTimeout(function(){
+									uni.switchTab({
+										url: '../two/two'
+									});
+								},500)
 								break;
 							case 'waiting_self_confirm':
 								uni.navigateTo({
@@ -789,7 +791,7 @@ export default {
 						switch (this.typeTwo) {
 							case 'waiting_dealer_confirm':
 								uni.navigateTo({
-									url: './order?title=采购单' + '&type=5' + '&orderId=' + dataItem.id +'&newFalg=1'
+									url: './order?title=采购单' + '&type=8' + '&orderId=' + dataItem.id +'&newFalg=1'
 								});
 								break;
 							case 'sent_goods':

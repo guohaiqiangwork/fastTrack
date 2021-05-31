@@ -219,6 +219,7 @@ export default {
 		if(uni.getStorageSync('fromFalg') == ''){
 			this.fromFalg = ''
 		}
+		console.log('我在这个')
 		if (uni.getStorageSync('fromFalg')) {
 			//采购单数据
 			if (uni.getStorageSync('threeFalg') == 1) {
@@ -490,11 +491,11 @@ export default {
 								console.log(res);
 								this.consigneeDataX = '';
 								uni.setStorageSync('consigneeDataX', {});
-								uni.setStorageSync('threeFalg', 'xs'); //身份标识
+								uni.setStorageSync('threeFalgTab', 'xs'); //身份标识
 								
 							} else {
 								// 采购单创建
-								uni.setStorageSync('threeFalg', 'cg'); //身份标识
+								uni.setStorageSync('threeFalgTab', 'cg'); //身份标识
 								// uni.setStorageSync('threeFalgType', '0'); //身份标识
 								this.consignorData = '';
 								uni.setStorageSync('consignor', {}); //清空发货人信息

@@ -33,23 +33,22 @@
 					<!-- <view class="mt-15">货运信息</view>
 					<view class="">名称：{{ orderDetail.logisticsDriver }}</view>
 					 -->
-					
 					<view class="flex justify-between">
 						<view class="">
 							<!-- {{this.userType}} -->
 							<view class="mt-15">货运信息</view>
 							<view class="">名称：{{ orderDetail.logisticsDriver }}</view>
 						</view>
-						<view class="" v-if="this.userType == 'dealer'">
+						<view class=""  v-if="this.userType != 'dealer'">
 							<view class="r_btn" v-if="model != 4 && model != 8 && model != 100" @click="goUrl('transport')">编辑货运信息</view>
 						</view>
 					</view>
-					
 					<view class="flex">
 						<view class="wp-40">车牌号：{{ orderDetail.logisticsPlate }}</view>
 						<view class="">电话：{{ orderDetail.logisticsMobile }}</view>
 					</view>
 					<view class="">运费：{{ orderDetail.logisticsMoney }}元</view>
+					
 				</block>
 			</view>
 
