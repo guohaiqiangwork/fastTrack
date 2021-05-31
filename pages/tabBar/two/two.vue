@@ -346,6 +346,7 @@ export default {
 				this.consigneeDataX = {};
 				this.orderDetail = {};
 			}
+		
 			
 			uni.setStorageSync('orderId','')
 		}

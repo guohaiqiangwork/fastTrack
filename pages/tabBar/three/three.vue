@@ -791,7 +791,7 @@ export default {
 						switch (this.typeTwo) {
 							case 'waiting_dealer_confirm':
 								uni.navigateTo({
-									url: './order?title=采购单' + '&type=8' + '&orderId=' + dataItem.id +'&newFalg=1'
+									url: './order?title=采购单' + '&type=6' + '&orderId=' + dataItem.id +'&newFalg=1'
 								});
 								break;
 							case 'sent_goods':
