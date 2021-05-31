@@ -274,7 +274,7 @@ export default {
 					type: 'waiting_send_goods'
 				}
 			],
-			typeTwo: 'new',
+			typeTwo: 'waiting_self_confirm',
 			twolistA: [
 				{
 					title: '已发货',
@@ -300,12 +300,11 @@ export default {
 
 	onShow() {
 		// 加工商订单创建过来的
-		// if (uni.getStorageSync('threeFalg') == 'cg') {
-		// 	this.typeTab = 'b';
-		// 	if (uni.getStorageSync('threeFalgType') == 0) {
-		// 		this.typeTwo = 'new';
-		// 	}
-		// }
+		if (uni.getStorageSync('threeFalg') == 'cg') {
+			this.typeTab = 'b';
+		}else if (uni.getStorageSync('threeFalg') == 'xs') {
+			this.typeTab = 's';
+		}
 		this.userType = uni.getStorageSync('comType');
 		if (this.userType == 'supplier') {
 			this.tabList = [
@@ -393,15 +392,46 @@ export default {
 					type: 'cancelled'
 				}
 			];
-			this.typeTwo = 'waiting_self_confirm';
+			this.typeTwo = 'waiting_dealer_confirm';
 			this.typeTab = 's';
 		}
 		this.getList();
 	},
 	onLoad() {},
+	onHide() {
+		uni.setStorageSync('threeFalg', ''); //身份标识
+	},
 	methods: {
 		// 订单列表获取
 		getList: function() {
+			var d1 = new Date(this.startDateOne.replace(/\-/g, '\/'));
+			var d2 = new Date(this.endDateOne.replace(/\-/g, '\/'));
+			if (!d1) {
+				uni.showToast({
+					title: '请选择开始日期',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+			} else if (!d2) {
+				uni.showToast({
+					title: '请选择结束日期',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+			} else if (d1 > d2) {
+				uni.showToast({
+					title: '结束时间不能小于开始日期',
+					icon: 'none',
+					duration: 2000,
+					position: 'center'
+				});
+				this.startDateOne = getDate('start');
+				this.endDateOne = getDate('end');
+				return;
+			}
+					
 			let data = {
 				type: this.typeTab,
 				status: this.typeTwo,
@@ -414,8 +444,10 @@ export default {
 					console.log('8');
 					if (data.status == 'waiting_dealer_confirm') {
 						(data.needSelfConfirm = '1'), (data.needOtherConfirm = '0');
+						data.status = null
 					} else if (data.status == 'waiting_self_confirm') {
 						(data.needSelfConfirm = '0'), (data.needOtherConfirm = '1');
+						data.status = null
 					} else if (data.status == 'waiting_pay_money') {
 						data.status = 'received_goods';
 					}
@@ -423,8 +455,10 @@ export default {
 					//经销商
 					if (data.status == 'waiting_dealer_confirm') {
 						(data.needSelfConfirm = '0'), (data.needOtherConfirm = '1');
+						data.status = null
 					} else if (data.status == 'waiting_self_confirm') {
 						(data.needSelfConfirm = '1'), (data.needOtherConfirm = '0');
+						data.status = null
 					}
 				}
 			}
@@ -449,11 +483,13 @@ export default {
 		bindDateChange: function(e) {
 			// console.log(e.detail.value);
 			this.startDateOne = e.detail.value;
+			this.getList(); //获取列表数据
 		},
 		// 获取结束时间
 		bindDateChangeEnd: function(e) {
 			// console.log(e.detail.value);
 			this.endDateOne = e.detail.value;
+			this.getList(); //获取列表数据
 		},
 		tabOne: function(item) {
 			console.log('我是谁' + item);
@@ -480,7 +516,7 @@ export default {
 						}
 					];
 					this.twolistA = [];
-					this.typeTwo = 'waiting_dealer_confirm';
+					this.typeTwo = 'waiting_self_confirm';
 				} else if (item == 's') {
 					this.twoList = [
 						{
@@ -518,7 +554,7 @@ export default {
 							type: 'cancelled'
 						}
 					];
-					this.typeTwo = 'new';
+					this.typeTwo = 'waiting_self_confirm';
 				} else {
 					this.twoList = [
 						{
@@ -556,7 +592,7 @@ export default {
 							type: 'cancelled'
 						}
 					];
-					this.typeTwo = 'new';
+					this.typeTwo = 'waiting_self_confirm';
 				}
 			} else if (this.userType == 'supplier') {
 				//供应商
@@ -581,7 +617,7 @@ export default {
 						}
 					];
 					this.twolistA = [];
-					this.typeTwo = 'waiting_dealer_confirm';
+					this.typeTwo = 'waiting_self_confirm';
 				} else {
 					this.twoList = [
 						{
@@ -615,7 +651,7 @@ export default {
 							type: 'cancelled'
 						}
 					];
-					this.typeTwo = 'waiting_provider_confirm';
+					this.typeTwo = 'waiting_self_confirm';
 				}
 			}
 
@@ -629,7 +665,7 @@ export default {
 		// 去查看
 		goUrl: function(item) {
 			var dataItem = item;
-			// console.log(dataItem);
+			console.log(dataItem);
 			// 加工商
 			if (this.userType == 'fabricators') {
 				switch (this.typeTab) {
@@ -655,7 +691,7 @@ export default {
 								break;
 							case 'cancelled':
 								uni.navigateTo({
-									url: './order?title=采购单' + '&type=8' + '&orderId=' + dataItem.id
+									url: './order?title=采购单' + '&type=100' + '&orderId=' + dataItem.id
 								});
 								break;
 						}
@@ -682,7 +718,7 @@ export default {
 								break;
 							case 'cancelled':
 								uni.navigateTo({
-									url: './order?title=销售单' + '&type=8' + '&orderId=' + dataItem.id
+									url: './order?title=销售单' + '&type=100' + '&orderId=' + dataItem.id
 								});
 								break;
 						}
@@ -753,17 +789,17 @@ export default {
 						switch (this.typeTwo) {
 							case 'waiting_dealer_confirm':
 								uni.navigateTo({
-									url: './order?title=销售单' + '&type=5' + '&orderId=' + dataItem.id
+									url: './order?title=采购单' + '&type=5' + '&orderId=' + dataItem.id +'&newFalg=1'
 								});
 								break;
 							case 'sent_goods':
 								uni.navigateTo({
-									url: './order?title=销售单' + '&type=4' + '&orderId=' + dataItem.id
+									url: './order?title=采购单' + '&type=100' + '&orderId=' + dataItem.id
 								});
 								break;
 							case 'cancelled':
 								uni.navigateTo({
-									url: './order?title=销售单' + '&type=8' + '&orderId=' + dataItem.id
+									url: './order?title=采购单' + '&type=100' + '&orderId=' + dataItem.id
 								});
 								break;
 						}
@@ -802,6 +838,8 @@ export default {
 				this.endDateOne = getDate('end');
 				return;
 			}
+		
+		
 			if (this.startDateOne == '请选择') {
 				this.startDateOne = '';
 			}

@@ -41,7 +41,10 @@
 
 		<view class="moudel_list pb-70" v-if="model == 'order'">
 			<view style="margin-left: 10%;" class="wp-80 pt-50 "><input class="input_m pl-20" v-model="reason" maxlength="199" type="text" value="" placeholder="请输入取消订单原因" /></view>
-			<view class="btn_bd mt-60" style="background-color: #A77845;" @click="okButtom">确认</view>
+			<view class="flex">
+				<view class="btn_bd_50 mt-60" style="background-color: #A77845;" @click="okButtom('2')">取消</view>
+				<view class="btn_bd_50 mt-60" @click="okButtom">确认</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -57,7 +60,9 @@ export default {
 			prictAll: '',
 			productName: '',
 			productPrice: '',
-			reason: ''
+			reason: '',
+			orderId: '',
+			confirm:''
 		};
 	},
 	onLoad(option) {
@@ -84,9 +89,39 @@ export default {
 				console.log(that.prictAll);
 			}
 		});
+		
+		if(option.orderId){
+			this.orderId = option.orderId;
+			this.confirm = option.confirm
+		}
+		
+	
 	},
 	methods: {
-		okButtom: function() {
+		// 处理输入完信息直接操作
+		orderOk:function(){
+			let data = {
+				orderId: this.orderId,
+				confirm: this.confirm
+			};
+			this.$http.post('/system/orders/cancel', data, true).then(res => {
+				console.log(res);
+				if (res.data.code == 200) {
+					uni.switchTab({
+						url:'../tabBar/three/three'
+					})
+				}else{
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 1500,
+						position: 'center',
+					});
+				}
+			});
+		},
+		
+		okButtom: function(item) {
 			if (this.model == 'register') {
 				uni.reLaunch({
 					url: './noModel'
@@ -150,10 +185,14 @@ export default {
 					}
 				});
 			} else if (this.model == 'order') {
-				uni.setStorageSync('reason',this.reason)
-				uni.navigateBack({
-					
-				})
+				if(item=='2'){
+					this.reason  =  ''
+					uni.setStorageSync('reason','')
+					uni.navigateBack({})
+				}else{
+					this.orderOk();
+				}
+				
 			}
 		}
 	}
@@ -180,7 +219,20 @@ page {
 	// bottom: 5%;
 	// width: 94%;
 }
-
+.btn_bd_50{
+	height: 90upx;
+	background: #98d0ab;
+	border-radius: 10upx;
+	text-align: center;
+	align-items: center;
+	color: #ffffff;
+	font-size: 30upx;
+	line-height: 90upx;
+	margin-top: 30upx;
+	border-radius: 50upx;
+	width: 40%;
+	margin-left: 5%;
+}
 .input_m {
 	height: 80upx;
 	line-height: 80upx;

@@ -137,10 +137,8 @@
 			</view>
 		</block>
 	</view>
-	
-	<view class="text-center" style="margin-top: 30%;" v-else>
-		暂无权限,请登录加工商账号
-	</view>
+
+	<view class="text-center" style="margin-top: 30%;" v-else>暂无权限,请登录加工商账号</view>
 </template>
 
 <script>
@@ -171,17 +169,19 @@ export default {
 				bankCard: '',
 				phone: ''
 			}, //发货人信息
-			totalPrice:0, //总数
+			totalPrice: 0, //总数
 			consigneeDataX: '',
 			fromFalg: '',
 			urlfalg: '',
 			orderDetail: {
 				createTime: '2021-04-26'
 			},
-			userType:''
+			userType: '',
+			orderId :''
 		};
 	},
 	onLoad(option) {
+		console.log(uni.getStorageSync('fromFalg') + '看看数据')
 		if (uni.getStorageSync('fromFalg')) {
 		} else {
 			// 获取收货人信息采购单     销售单发货人信息
@@ -195,7 +195,7 @@ export default {
 	onShow(option) {
 		let that = this;
 		this.userType = uni.getStorageSync('comType');
-		
+
 		// 获取选择产品数据
 		uni.getStorage({
 			key: 'prictList_key',
@@ -203,7 +203,9 @@ export default {
 				that.productlist = res.data;
 			}
 		});
+		this.totalPrice = 0;
 		this.getTotal(); //计算总价
+		
 		// 获取发货人信息 采购单
 		if (uni.getStorageSync('consignor')) {
 			this.consignorData = uni.getStorageSync('consignor');
@@ -211,13 +213,16 @@ export default {
 		// 获取收货人信息 销售单
 		if (uni.getStorageSync('consigneeDataX')) {
 			this.consigneeDataX = uni.getStorageSync('consigneeDataX');
-			console.log(JSON.stringify(this.consigneeDataX )  + '获取带');
+			console.log(JSON.stringify(this.consigneeDataX) + '获取带');
 		}
 		// 处理从订单管理页面过来的数据 采购订单
+		if(uni.getStorageSync('fromFalg') == ''){
+			this.fromFalg = ''
+		}
 		if (uni.getStorageSync('fromFalg')) {
 			//采购单数据
 			if (uni.getStorageSync('threeFalg') == 1) {
-				let _this =  this;
+				let _this = this;
 				_this.fromFalg = uni.getStorageSync('fromFalg');
 				_this.orderId = uni.getStorageSync('orderId');
 				_this.typeTab = uni.getStorageSync('threeFalg');
@@ -227,22 +232,21 @@ export default {
 					let resData = res.data.data;
 					let _this = this;
 					if (res.data.code == 200) {
-					
-						_this.consigneeData = {
+						(_this.consigneeData = {
 							comName: '',
 							address: '',
 							leader: '',
 							phone: ''
-						}, //收货人信息
-						// 发货人信息
-						_this.consignorData.name = resData.sellerName;
+						}), //收货人信息
+							// 发货人信息
+							(_this.consignorData.name = resData.sellerName);
 						_this.consignorData.bankCard = resData.sellerBankAccount;
 						_this.consignorData.phone = resData.sellerMobile;
 						// 收货人信息
 						_this.consigneeData.comName = resData.buyerName; //公司名称
 						_this.consigneeData.address = resData.buyerArea; //公司地址
-						_this.consigneeData.phone = resData.buyerMobile;
-						_this.consigneeData.leader = resData.createBy;
+						_this.consigneeData.phone = resData.buyerMobile; //电话
+						_this.consigneeData.leader = resData.buyerId; //联系人id
 						let dataList = [];
 						if (resData.details.length > 0) {
 							for (let i = 0; i < resData.details.length; i++) {
@@ -256,7 +260,14 @@ export default {
 								dataList.push(item);
 							}
 						}
-
+					
+						uni.setStorage({
+							key: 'prictList_key',
+							data: dataList,
+							success: function() {
+							
+							}
+						});
 						this.productlist = dataList;
 						this.getTotal(); //计算总价
 					}
@@ -273,7 +284,7 @@ export default {
 					let resData = res.data.data;
 					that.orderDetail = resData;
 					if (res.data.code == 200) {
-						console.log('6786')
+						console.log('6786');
 						// 货人信息
 						that.consigneeData.name = resData.sellerName;
 						that.consigneeData.bankCard = resData.sellerBankAccount;
@@ -287,8 +298,8 @@ export default {
 							phone: '',
 							leader: ''
 						};
-						console.log('我是' + JSON.stringify(resData) )
-						that.consigneeDataX.comName = resData.buyerComName ; //公司名称
+						console.log('我是' + JSON.stringify(resData));
+						that.consigneeDataX.comName = resData.buyerComName; //公司名称
 						that.consigneeDataX.address = resData.buyerArea; //公司地址
 						that.consigneeDataX.phone = resData.buyerMobile;
 						that.consigneeDataX.leader = resData.buyerName;
@@ -297,8 +308,8 @@ export default {
 						that.consignorData.address = resData.buyerArea; //公司地址
 						that.consignorData.phone = resData.buyerMobile;
 						that.consignorData.leader = resData.buyerName;
-						uni.setStorageSync('consigneeDataX',that.consignorData)
-						console.log(JSON.stringify(that.consignorData) + '看看存了')
+						uni.setStorageSync('consigneeDataX', that.consignorData);
+						console.log(JSON.stringify(that.consignorData) + '看看存了');
 						let dataList = [];
 						if (resData.details.length > 0) {
 							for (let i = 0; i < resData.details.length; i++) {
@@ -335,6 +346,14 @@ export default {
 				this.orderDetail = {};
 			}
 		}
+		// 清空商品数据
+		// uni.setStorage({
+		// 	key: 'prictList_key',
+		// 	data: [],
+		// 	success: function(e) {
+				
+		// 	}
+		// });
 	},
 	methods: {
 		// 计算总价采购单
@@ -357,12 +376,12 @@ export default {
 		delList: function(item) {
 			let that = this;
 			that.productlist.splice(item, 1);
-			if(that.productlist.length == 0){
-				this.totalPrice  = 0
-			}else{
+			if (that.productlist.length == 0) {
+				this.totalPrice = 0;
+			} else {
 				this.getTotal();
 			}
-			
+
 			uni.setStorage({
 				key: 'prictList_key',
 				data: that.productlist,
@@ -401,106 +420,139 @@ export default {
 		save: function(type, urlfalg) {
 			var urlData = '';
 			var data = '';
-			let dataShipperId = ''
-			console.log(this.typeTab )
+			let dataShipperId = '';
+			console.log(this.typeTab);
 			let dataName = {
 				type: this.typeTab != 2 ? 'supplier' : 'dealer',
-				name: this.typeTab != 2 ?  this.consignorData.name  : this.consigneeDataX.comName
+				name: this.typeTab != 2 ? this.consignorData.name : this.consigneeDataX.comName
 			};
 			this.$http.post('/system/company/search', dataName, true).then(res => {
 				if (res.data.code == 200) {
-					if(res.data.data.length > 0){
-						dataShipperId = res.data.data[0].comId
-						if (this.typeTab == 2) {
-							//销售
-							urlData = '/system/orders/sold';
-							data = {
-								orderId: '',
-								shipperId: dataShipperId || uni.getStorageSync('comId'),
-								confirmed: type,
-								senderName: this.consigneeData.comName,
-								senderBankAccount: this.consigneeData.bankAccount,
-								senderPhone: this.consigneeData.phone,
-								receiverName: this.consigneeDataX.leader,
-								receiverPhone: this.consigneeDataX.phone,
-								receiverAddress: this.consigneeDataX.address,
-								products: this.productlist
-							};
-						} else {
-							console.log('采购低昂单');
-							urlData = '/system/orders/procure';
-							data = {
-								orderId: '',
-								shipperId:dataShipperId || uni.getStorageSync('comId'),
-								confirmed: type,
-								senderName: this.consignorData.name,
-								senderBankAccount: this.consignorData.bankCard,
-								senderPhone: this.consignorData.phone,
-								receiverName: this.consigneeData.comName,
-								receiverPhone: this.consigneeData.phone,
-								receiverAddress: this.consigneeData.address,
-								products: this.productlist
-							};
-							if (!data.senderName || !data.senderBankAccount) {
-								uni.showToast({
-									title: '发货人信息不能为空',
-									time: 2000,
-									icon: 'none'
-								});
-								return;
-							}
-						}
-						this.$http.post(urlData, data, true).then(res => {
-							if (res.data.code == 200) {
-								//销售
-								if (this.typeTab == 2) {
-									console.log(res);
-									this.consigneeDataX = '';
-								} else {
-									// uni.setStorageSync('threeFalg', 'cg'); //身份标识
-									// uni.setStorageSync('threeFalgType', '0'); //身份标识
-									this.consignorData = '';
-									uni.setStorageSync('consignor', ''); //清空发货人信息
-								}
-								this.productlist = [];
-								uni.setStorage({
-									key: 'prictList_key',
-									data: this.productlist,
-									success: function() {
-										uni.switchTab({
-											url: '../three/three'
-										});
-									}
-								});
-							} else {
-								uni.showToast({
-									title: res.data.msg,
-									time: 2000,
-									icon: 'none'
-								});
-							}
-						});
-								
+					if (res.data.data.length > 0) {
+						dataShipperId = res.data.data[0].comId;
+					} else {
+						dataShipperId = '';
 					}
+					
+					if(this.productlist.length == 0){
+						uni.showToast({
+							title: '请添加商品',
+							time: 2000,
+							icon: 'none'
+						});
+						return
+					}
+					
+					if (this.typeTab == 2) {
+						//销售
+						urlData = '/system/orders/sold';
+						data = {
+							orderId: this.orderId ,
+							shipperId: dataShipperId,
+							confirmed: type,
+							senderName: this.consigneeData.comName,
+							senderBankAccount: this.consigneeData.bankAccount,
+							senderPhone: this.consigneeData.phone,
+							receiverName: this.consigneeDataX.leader,
+							receiverPhone: this.consigneeDataX.phone,
+							receiverAddress: this.consigneeDataX.address,
+							products: this.productlist
+						};
+					} else {
+						console.log('采购低昂单');
+						urlData = '/system/orders/procure';
+						data = {
+							orderId: this.orderId ,
+							shipperId: dataShipperId || uni.getStorageSync('comId'),
+							confirmed: type,
+							senderName: this.consignorData.name,
+							senderBankAccount: this.consignorData.bankCard,
+							senderPhone: this.consignorData.phone,
+							receiverName: this.consigneeData.comName,
+							receiverPhone: this.consigneeData.phone,
+							receiverAddress: this.consigneeData.address,
+							products: this.productlist
+						};
+						if (!data.senderName || !data.senderBankAccount) {
+							uni.showToast({
+								title: '发货人信息不能为空',
+								time: 2000,
+								icon: 'none'
+							});
+							return;
+						}
+						
+					}
+					this.$http.post(urlData, data, true).then(res => {
+						if (res.data.code == 200) {
+							//销售单创建
+							if (this.typeTab == 2) {
+								console.log(res);
+								this.consigneeDataX = '';
+								uni.setStorageSync('consigneeDataX', {});
+								uni.setStorageSync('threeFalg', 'xs'); //身份标识
+								
+							} else {
+								// 采购单创建
+								uni.setStorageSync('threeFalg', 'cg'); //身份标识
+								// uni.setStorageSync('threeFalgType', '0'); //身份标识
+								this.consignorData = '';
+								uni.setStorageSync('consignor', {}); //清空发货人信息
+								
+							}
+							this.productlist = [];
+							uni.setStorage({
+								key: 'prictList_key',
+								data: this.productlist,
+								success: function() {
+									uni.switchTab({
+										url: '../three/three'
+									});
+								}
+							});
+						} else {
+							uni.showToast({
+								title: res.data.msg,
+								time: 2000,
+								icon: 'none'
+							});
+						}
+					});
 				}
 			});
-			
-			return
-		
-		
+
+			return;
 		},
 
 		//订单取消
 		overOrder: function() {
-			let url = '/system/orders/' + this.orderId + '/cancel';
-			this.$http.post(url, '', true).then(res => {
+			let data = {
+				orderId: this.orderId,
+				reason: ''
+			};
+			
+			this.$http.post('/system/orders/cancel', data, true).then(res => {
 				if (res.data.code == 200) {
 					uni.setStorageSync('fromFalg', '');
+					if (this.typeTab == 2) {
+						uni.setStorageSync('consigneeDataX', {});
+					} else {
+						uni.setStorageSync('consignorData', {}); //清空发货人信息
+					}
 					uni.switchTab({
 						url: '../one/one'
 					});
 				}
 			});
+			// let url = '/system/orders/' + this.orderId + '/cancel';
+			// this.$http.post(url, '', true).then(res => {
+			// 	if (res.data.code == 200) {
+			// 		uni.setStorageSync('fromFalg', '');
+			// 		uni.switchTab({
+			// 			url: '../one/one'
+			// 		});
+			// 	}
+			// });
 		}
 	}
 };

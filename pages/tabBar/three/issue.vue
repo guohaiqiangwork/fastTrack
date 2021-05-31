@@ -19,11 +19,15 @@
 						</view>
 						<view class="wp-45" style="margin-left: 5%;">
 							<view class="fs-25 color-29 fw-700">上传随货同行单</view>
-							<view class="mt-10" @click="uplodImg" v-if="!imgFalg" style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;">
-								<image   src="../../../static/images/add.png" style="width:38upx;height: 38upx;margin-top: 50upx;" mode=""></image>
+							<view
+								class="mt-10"
+								@click="uplodImg"
+								v-if="!imgFalg"
+								style="height: 139upx;background: #FFFFFF;border: 1px solid #A77845;text-align: center;align-items: center;"
+							>
+								<image src="../../../static/images/add.png" style="width:38upx;height: 38upx;margin-top: 50upx;" mode=""></image>
 							</view>
 							<image class="mt-10" v-if="imgFalg" @click="uplodImg" :src="tradeImage" style="width: 100%;height: 139upx;" mode=""></image>
-							
 						</view>
 					</view>
 				</view>
@@ -166,7 +170,8 @@ export default {
 			},
 			imgFalg: false,
 			tradeImage: '',
-			imgLefturl: ''
+			imgLefturl: '',
+			pageType:'',//从那来的
 		};
 	},
 	onLoad(option) {
@@ -184,7 +189,10 @@ export default {
 			this.getOrderDetail();
 		}
 		if (option.type != 3) {
-			this.getImg();
+			// this.getImg();
+		}
+		if(option.pageType){
+			this.pageType = option.pageType
 		}
 	},
 
@@ -195,16 +203,19 @@ export default {
 			this.$http.get(url, '', true).then(res => {
 				if (res.data.code == 200) {
 					this.orderDetail = res.data.data;
+					this.getImg()
 				}
 			});
+			
 		},
 		// 获取随行单图片
 		getImg: function() {
 			let url = '/file/download/from-' + this.orderId + '-152-51.png';
-			this.imgLefturl = 'http://121.89.193.22:9090/file/download/from-' + this.orderId + '-152-51.png';
-			this.$http.get(url, '', true).then(res => {
-				// this.imgLefturl= res
-			});
+			this.imgLefturl = 'http://121.89.193.22:9090/file/download/' + this.orderDetail.attachedSentTradeImage ;
+			console.log(this.imgLefturl)
+			// this.$http.get(url, '', true).then(res => {
+			// 	// this.imgLefturl= res
+			// });
 		},
 		//上传图片
 		uplodImg: function() {
@@ -238,25 +249,67 @@ export default {
 
 		// 同意不同意
 		okOrder: function(item) {
-			let data = {
-				id: this.orderDetail.id,
-				comment: '', //备注
-				confirmed: item, //是否确认
-				products: this.orderDetail.detail, //产品重量
-				tradeImage: this.tradeImage
-			};
+			if (item == 'true') {
+				let data = {
+					// id: this.orderDetail.id,
+					// comment: '', //备注
+					// confirmed: item, //是否确认
+					// products: this.orderDetail.detail, //产品重量
+					// tradeImage: this.tradeImage,
 
-			this.$http.post('/system/orders/update/delivery', data, true).then(res => {
-				if (res.data.code == 200) {
-					uni.navigateBack({});
-				} else {
-					uni.showToast({
-						title: res.data.msg,
-						time: 2000,
-						icon: 'none'
-					});
-				}
-			});
+					orderId: this.orderDetail.id,
+					done: 'true',
+					comment: '',
+					logisticsDriver: '', //物流司机姓名
+					logisticsMobile: '', // 物流手机号
+					logisticsPlate: '', //物流车牌
+					logisticsMoney: '', //物流价格
+					paid: false, //是否已付款
+					tradeImage: this.tradeImage
+				};
+
+				this.$http.post('/system/orders/update/logistics', data, true).then(res => {
+					if (res.data.code == 200) {
+						if(this.pageType == '发货'){
+							uni.switchTab({
+								url:'./three'
+							})
+						}else{
+								uni.navigateBack({});
+						}
+					
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							time: 2000,
+							icon: 'none'
+						});
+					}
+				});
+			} else {
+				let data = {
+					orderId: this.orderDetail.id,
+					reason: ''
+				};
+
+				this.$http.post('/system/orders/cancel', data, true).then(res => {
+					if (res.data.code == 200) {
+					if(this.pageType == '发货'){
+						uni.switchTab({
+							url:'./three'
+						})
+					}else{
+							uni.navigateBack({});
+					}
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							time: 2000,
+							icon: 'none'
+						});
+					}
+				});
+			}
 		},
 
 		tabOne: function(item) {

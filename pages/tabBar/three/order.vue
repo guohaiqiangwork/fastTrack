@@ -1,21 +1,5 @@
 <template>
 	<view class="pb-80">
-		<!-- 不同意弹窗 -->
-		<!-- 	<view class="" v-if="modelClose">
-			<view class="model_b">
-				<view class="model_b_m">
-					<view class="text-center fs-40 pt-30">请输入原因</view>
-					<view class=" wp-80 mt-30" style="margin-left: 10%;">
-						<input style="border: 1px solid #999999;height: 80upx;" type="text" value="" placeholder="请输入不同意的原因" />
-					</view>
-					<view class="two_btn_m mt-30">
-						<view class=" btn" style="border-right: 1px solid #a77845;" @click="closeModel">确认</view>
-						<view class="btn" style="color: #999999;">取消</view>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
 		<!-- 采购单 -->
 		<block v-if="title == '采购单'">
 			<view class="">
@@ -31,9 +15,9 @@
 
 					<view class=" bor_bottom pb-20">{{ orderDetail.sellerMobile }}</view>
 					<view class=" fw-700 mt-10">收货人信息</view>
-					<view class="mt-10">名称：{{ orderDetail.buyerName }}</view>
+					<view class="mt-10">名称：{{ orderDetail.buyerComName }}</view>
 					<view class="flex mt-10">
-						<view class="wp-50">联系人：{{ orderDetail.createBy }}</view>
+						<view class="wp-50">联系人：{{ orderDetail.buyerName }}</view>
 						<view class="">电话：{{ orderDetail.buyerMobile }}</view>
 					</view>
 					<view class="mt-10">地址：{{ orderDetail.buyerArea }}</view>
@@ -46,11 +30,24 @@
 					<view class="">日期：{{ orderDetail.createTime.substring(0, 10) }}</view>
 				</view>
 				<block v-if="model != 8">
-					<view class="mt-15">货运信息</view>
+					<!-- <view class="mt-15">货运信息</view>
 					<view class="">名称：{{ orderDetail.logisticsDriver }}</view>
+					 -->
+					
+					<view class="flex justify-between">
+						<view class="">
+							<!-- {{this.userType}} -->
+							<view class="mt-15">货运信息</view>
+							<view class="">名称：{{ orderDetail.logisticsDriver }}</view>
+						</view>
+						<view class="" v-if="this.userType == 'dealer'">
+							<view class="r_btn" v-if="model != 4 && model != 8 && model != 100" @click="goUrl('transport')">编辑货运信息</view>
+						</view>
+					</view>
+					
 					<view class="flex">
 						<view class="wp-40">车牌号：{{ orderDetail.logisticsPlate }}</view>
-						<view class="">电话：{{ orderDetail.ogisticsMobile }}</view>
+						<view class="">电话：{{ orderDetail.logisticsMobile }}</view>
 					</view>
 					<view class="">运费：{{ orderDetail.logisticsMoney }}元</view>
 				</block>
@@ -83,21 +80,23 @@
 
 			<view class="moudel_width">
 				<view class="btn_bd_t">总金额：{{ orderDetail.duePay }}（元）</view>
-				<block v-if="model != 8">
-					<view class="two_btn" v-if="model != 5">
-						<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
-						<view class="wp-50" @click="okOrder('true')">同意</view>
-					</view>
-					<view class="two_btn justify-center" v-if="false">点击收货</view>
-				</block>
-				<block v-else>
-					<view class="moudel_list mt-40 pt-20">
-						<view class="flex ">
-							<view class="fs-25 wp-15">备注：</view>
-							<view class="wp-80"><textarea style="height: 210upx;" value="" placeholder="请填写备注" /></view>
+				<view class="" v-if="model != 100">
+					<block v-if="model != 8">
+						<view class="two_btn" v-if="model != 5">
+							<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
+							<view class="wp-50" @click="okOrder('true')">同意</view>
 						</view>
-					</view>
-				</block>
+						<view class="two_btn justify-center" v-if="false">点击收货</view>
+					</block>
+					<block v-else>
+						<view class="moudel_list mt-40 pt-20">
+							<view class="flex ">
+								<view class="fs-25 wp-15">备注：</view>
+								<view class="wp-80"><textarea style="height: 210upx;" value="" placeholder="请填写备注" /></view>
+							</view>
+						</view>
+					</block>
+				</view>
 			</view>
 		</block>
 
@@ -116,9 +115,9 @@
 
 					<view class=" bor_bottom pb-20">{{ orderDetail.sellerMobile }}</view>
 					<view class=" fw-700 mt-10">收货人信息</view>
-					<view class="mt-10">名称：{{ orderDetail.buyerName }}</view>
+					<view class="mt-10">名称：{{ orderDetail.buyerComName }}</view>
 					<view class="flex mt-10">
-						<view class="wp-50">联系人：{{ orderDetail.createBy }}</view>
+						<view class="wp-50">联系人：{{ orderDetail.buyerName }}</view>
 						<view class="">电话：{{ orderDetail.buyerMobile }}</view>
 					</view>
 					<view class="mt-10">地址：{{ orderDetail.buyerArea }}</view>
@@ -130,17 +129,19 @@
 					<view class="">订单号：{{ orderDetail.id }}</view>
 					<view class="">日期：{{ orderDetail.createTime.substring(0, 10) }}</view>
 				</view>
-				<block v-if="orderDetail.logisticsDriver">
+				<block v-if="newFalg != 1">
 					<view class="flex justify-between">
 						<view class="">
 							<view class="mt-15">货运信息</view>
 							<view class="">名称：{{ orderDetail.logisticsDriver }}</view>
 						</view>
-						<view class="r_btn" v-if="model != 4 && model != 8" @click="goUrl('transport')">编辑货运信息</view>
+						<view class="" v-if="this.userType != 'dealer'">
+							<view class="r_btn" v-if="model != 4 && model != 8 && model != 100" @click="goUrl('transport')">编辑货运信息</view>
+						</view>
 					</view>
 					<view class="flex">
 						<view class="wp-40">车牌号：{{ orderDetail.logisticsPlate }}</view>
-						<view class="">电话：{{ orderDetail.ogisticsMobile }}</view>
+						<view class="">电话：{{ orderDetail.logisticsMobile }}</view>
 					</view>
 					<view class="">运费：{{ orderDetail.logisticsMoney }}元</view>
 				</block>
@@ -173,21 +174,23 @@
 
 			<view class="moudel_width">
 				<view class="btn_bd_t">总金额：{{ orderDetail.duePay }}（元）</view>
-				<block v-if="model != 8">
-					<view class="two_btn" v-if="model == 5">
-						<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
-						<view class="wp-50" @click="okOrder('true')">同意</view>
-					</view>
-					<view class="two_btn justify-center" @click="sendgoods" v-else>{{ model == 4 ? '发货' : '点击收货' }}</view>
-				</block>
-				<block v-else>
-					<view class="moudel_list mt-40 pt-20">
-						<view class="flex ">
-							<view class="fs-25 wp-15">备注：</view>
-							<view class="wp-80"><textarea style="height: 210upx;" value="" v-model="orderDetail.comment" placeholder="请填写备注" /></view>
+				<view class="" v-if="model != 100">
+					<block v-if="model != 8">
+						<view class="two_btn" v-if="model == 5">
+							<view class="wp-50" style="border-right: 1px solid #A77845;" @click="okOrder('false')">不同意</view>
+							<view class="wp-50" @click="okOrder('true')">同意</view>
 						</view>
-					</view>
-				</block>
+						<view class="two_btn justify-center" @click="sendgoods" v-else>{{ model == 4 ? '发货' : '点击收货' }}</view>
+					</block>
+					<block v-else>
+						<view class="moudel_list mt-40 pt-20">
+							<view class="flex ">
+								<view class="fs-25 wp-15">备注：</view>
+								<view class="wp-80"><textarea style="height: 210upx;" value="" v-model="orderDetail.comment" placeholder="请填写备注" /></view>
+							</view>
+						</view>
+					</block>
+				</view>
 			</view>
 		</block>
 	</view>
@@ -211,7 +214,8 @@ export default {
 			},
 			userType: '',
 			modelClose: true, //供应商不同意弹窗
-			reason: ''
+			reason: '',
+			newFalg: ''
 		};
 	},
 	onLoad(option) {
@@ -219,6 +223,9 @@ export default {
 		this.model = option.type;
 		this.title = option.title;
 		this.userType = uni.getStorageSync('comType');
+		if (option.newFalg) {
+			this.newFalg = option.newFalg;
+		}
 		if (option.listName) {
 			this.listName = option.listName;
 		}
@@ -233,8 +240,8 @@ export default {
 	onShow() {
 		this.orderId ? this.getOrderDetail() : '';
 
-		if(uni.getStorageSync('reason')){
-			this.reason = uni.getStorageSync('reason')
+		if (uni.getStorageSync('reason')) {
+			this.reason = uni.getStorageSync('reason');
 		}
 	},
 
@@ -250,58 +257,107 @@ export default {
 		},
 		// 加工商发货
 		sendgoods: function() {
-			let data = {
-				orderId: this.orderId,
-				confirm: 'true',
-				comment: ''
-			};
-			this.$http.post('/system/orders/confirm/sendgoods', data, true).then(res => {
-				if (res.data.code == 200) {
-					uni.navigateBack({});
-				} else {
-					uni.showToast({
-						title: res.data.msg,
-						time: 2000,
-						icon: 'none'
-					});
-				}
+			uni.navigateTo({
+				url: './issue?title=发货单' + '&type=2' + '&orderId=' + this.orderId + '&pageType=发货'
 			});
+			// let data = {
+			// 	orderId: this.orderId,
+			// 	confirm: 'true',
+			// 	comment: ''
+			// };
+			// this.$http.post('/system/orders/confirm/sendgoods', data, true).then(res => {
+			// 	if (res.data.code == 200) {
+			// 		uni.navigateBack({});
+			// 	} else {
+			// 		uni.showToast({
+			// 			title: res.data.msg,
+			// 			time: 2000,
+			// 			icon: 'none'
+			// 		});
+			// 	}
+			// });
 		},
 		//加工商同意收货
 		okOrder: function(item) {
+			console.log(item + '我是那个端' + this.userType);
+			// return
+			// 加工商订单操作
 			if (this.userType == 'fabricators') {
 				let data = {
 					orderId: this.orderId,
 					confirm: item
 				};
-				this.$http.post('/system/orders/self/confirm', data, true).then(res => {
+				var fUrl = '';
+				// 判断是同意还是不同意
+				if (item == 'true') {
+					var fUrl = '/system/orders/self/confirm';
+				} else {
+					var fUrl = '/system/orders/cancel';
+				}
+				console.log(fUrl);
+				this.$http.post(fUrl, data, true).then(res => {
 					console.log(res);
 					if (res.data.code == 200) {
 						uni.navigateBack({});
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 1500,
+							position: 'center'
+						});
 					}
 				});
 			} else if (this.userType == 'supplier') {
+				// 上游
 				if (item == 'false') {
-					if(this.reason){
-						this.closeModel()
-					}else{
-						uni.navigateTo({
-							url: '../../model/model?title=提示' + '&type=order'
-						});
-					}
-					
+					uni.navigateTo({
+						url: '../../model/model?title=提示' + '&type=order' + '&orderId=' + this.orderId + '&confirm=' + item
+					});
 				} else {
 					let data = {
 						orderId: this.orderId,
 						confirm: item
 					};
+					var sUrl = '';
 					this.$http.post('/system/orders/provider/confirm', data, true).then(res => {
-						console.log(res);
 						if (res.data.code == 200) {
 							uni.navigateBack({});
+						} else {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none',
+								duration: 1500,
+								position: 'center'
+							});
 						}
 					});
 				}
+			} else if (this.userType == 'dealer') {
+				let data = {
+					orderId: this.orderId,
+					confirm: item
+				};
+				var dUrl = '';
+				// 判断是同意还是不同意
+				if (item == 'true') {
+					var dUrl = '/system/orders/seller/confirm';
+				} else {
+					var dUrl = '/system/orders/cancel';
+				}
+				console.log(dUrl);
+				this.$http.post(dUrl, data, true).then(res => {
+					if (res.data.code == 200) {
+						uni.navigateBack({});
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 1500,
+							position: 'center'
+						});
+					}
+				});
 			}
 		},
 		//取消订单
@@ -313,7 +369,7 @@ export default {
 
 			this.$http.post('/system/orders/cancel', data, true).then(res => {
 				if (res.data.code == 200) {
-					uni.setStorageSync('reason','')
+					uni.setStorageSync('reason', '');
 					uni.navigateBack({});
 				}
 			});

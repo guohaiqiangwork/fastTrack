@@ -95,9 +95,9 @@ export default {
 							uni.setStorageSync('comId', res.data.data.comId); //用户ID
 							uni.setStorageSync('bankAccount', res.data.data.bankAccount); //存储银行卡号
 							uni.setStorageSync('fromFalg', '');
-							uni.setStorageSync('consignorData', '');
-							uni.setStorageSync('consigneeDataX', '');
-							uni.setStorageSync('orderDetail', '');
+							uni.setStorageSync('consignorData', {});
+							uni.setStorageSync('consigneeDataX', {});
+							uni.setStorageSync('orderDetail', {});
 							uni.setStorage({
 								key: 'prictList_key',
 								data: [],
