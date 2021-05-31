@@ -346,6 +346,8 @@ export default {
 				this.consigneeDataX = {};
 				this.orderDetail = {};
 			}
+			
+			uni.setStorageSync('orderId','')
 		}
 		// 清空商品数据
 		// uni.setStorage({
